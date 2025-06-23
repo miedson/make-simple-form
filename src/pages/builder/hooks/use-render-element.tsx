@@ -12,6 +12,7 @@ export function useRenderElement() {
       label: element.label ?? '',
       name: element.name ?? '',
       placeholder: element.placeholder ?? '',
+      isPreview: element.isPreview,
       options: element.options ?? [],
     };
 

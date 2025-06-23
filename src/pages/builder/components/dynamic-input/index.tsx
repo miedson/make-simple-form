@@ -8,7 +8,7 @@ type DynamicRadioProps = {
 
 export function DynamicInput({ label, placeholder, name }: DynamicRadioProps) {
   return (
-    <VStack>
+    <VStack w={'full'}>
       <Field.Root orientation="vertical">
         <Field.Label>{label}</Field.Label>
         <Input placeholder={placeholder} name={name} />

@@ -8,7 +8,7 @@ import { headerFormSchema, type HeaderFormData } from './header-form.schema';
 import { useHeaderFormContext } from '../../contexts/header-form.context';
 import { useEffect } from 'react';
 
-export function HeaderBuilder() {
+export function BuilderHeader() {
   const formMethods = useForm<HeaderFormData>({
     resolver: zodResolver(headerFormSchema),
     mode: 'onChange',
@@ -35,6 +35,7 @@ export function HeaderBuilder() {
 
   return (
     <Flex
+      flexDir={{ base: 'column', md: 'row' }}
       w={'full'}
       h={'6.563rem'}
       paddingBlock={'1rem'}
@@ -44,14 +45,14 @@ export function HeaderBuilder() {
       alignItems={'center'}
       justifyContent={'space-between'}
     >
-      <Text fontSize={'3xl'} fontWeight={'bold'} lineHeight={'1.2rem'} color={'brand.600'}>
+      <Text fontSize={'3xl'} fontWeight={'bold'} lineHeight={'1.2rem'} color={'brand.600'} mr={'1rem'}>
         MakeSimpleForm
       </Text>
       <FormProvider {...formMethods}>
         <Flex
           as={'form'}
           maxH={'4.563rem'}
-          gap={'1rem'}
+          gap={{ sm: '0.5rem', md: '1rem' }}
           alignItems={'start'}
           onSubmit={handleSubmit(handleSave)}
         >
@@ -59,7 +60,7 @@ export function HeaderBuilder() {
             <Input placeholder="Novo formulário" {...register('name')} />
             <Field.ErrorText>{errors.name?.message}</Field.ErrorText>
           </Field.Root>
-          <Flex gap={'1rem'} alignItems={'center'}>
+          <Flex gap={{ sm: '0.5rem', md: '1rem' }} alignItems={'center'}>
             <Tooltip content={'Mais configurações'}>
               <Flex color={'blue.600'} cursor={'pointer'}>
                 <MoreSettingsForm />

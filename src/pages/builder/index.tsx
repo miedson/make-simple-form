@@ -1,11 +1,11 @@
-import { BodyBuilder } from './components/body';
-import { HeaderBuilder } from './components/header';
+import { BuilderBody } from './components/body';
+import { BuilderHeader } from './components/header';
 
 export function BuilderPage() {
   return (
     <>
-      <HeaderBuilder />
-      <BodyBuilder />
+      <BuilderHeader />
+      <BuilderBody />
     </>
   );
 }

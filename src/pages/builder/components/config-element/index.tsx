@@ -26,7 +26,7 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
     close: () => setOpen(false),
   }));
 
-  const { movedElement, setMovedElement, changeElement, removeElementById } = useDragDropContext();
+  const { movedElement, changeElement, removeElementById } = useDragDropContext();
 
   const handleCancel = () => {
     movedElement && removeElementById(movedElement?.id);
@@ -36,7 +36,6 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
   const handleSave = (data: MovedElementValidationData) => {
     if (data && movedElement) {
       changeElement(movedElement.id, data);
-      setMovedElement(undefined);
       setOpen(false);
       reset();
     }

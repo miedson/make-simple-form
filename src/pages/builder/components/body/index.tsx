@@ -5,7 +5,7 @@ import { Type, ChevronDown, Circle, AlignLeft, CheckSquare } from 'lucide-react'
 import { AreaCanvas } from '../area-canvas';
 import { ViewingArea } from '../viewing-area';
 
-export function BodyBuilder() {
+export function BuilderBody() {
   return (
     <Flex w={'full'} h={'svh'} bg={'gray.50'}>
       <Column
