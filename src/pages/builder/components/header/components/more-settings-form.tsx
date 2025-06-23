@@ -8,7 +8,7 @@ export function MoreSettingsForm() {
 
   return (
     <Popover.Root>
-      <Popover.Trigger asChild>
+      <Popover.Trigger w={'2rem'} h={'2rem'} padding={'0.3rem'} borderRadius={4} _hover={{ bg: 'blue.100', cursor: 'pointer' }} cursor={'pointer'} asChild>
         <Settings />
       </Popover.Trigger>
       <Portal>
