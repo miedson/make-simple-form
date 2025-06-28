@@ -64,6 +64,7 @@ export function AreaCanvas() {
           <Flex w={'full'} minH={'18.75rem'} flexDir={'column'} gap={'1rem'}>
             {elements.map((element) => (
               <Flex
+                key={element.id}
                 w={'full'}
                 border="2px dashed"
                 borderColor={'transparent'}

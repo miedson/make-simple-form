@@ -10,11 +10,11 @@ export const Routes = () => {
         <Route
           path="/"
           element={
-            <FormContexProvider>
-              <DragDropProvider>
+            <DragDropProvider>
+              <FormContexProvider>
                 <BuilderPage />
-              </DragDropProvider>
-            </FormContexProvider>
+              </FormContexProvider>
+            </DragDropProvider>
           }
         />
       </AppRoutes>

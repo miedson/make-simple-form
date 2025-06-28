@@ -6,15 +6,15 @@ import { useHeaderFormContext } from '../../contexts/header-form.context';
 export function ViewingArea() {
   const { elements } = useDragDropContext();
   const { renderElement } = useRenderElement();
-  const { formData } = useHeaderFormContext();
+  const { formDataPreview } = useHeaderFormContext();
 
   return (
     <Flex w={'full'} minH={'18.75rem'} flexDir={'column'} gap={'1rem'}>
       <Text fontSize={'lg'} fontWeight={'medium'}>
-        {formData?.name}
+        {formDataPreview?.name}
       </Text>
       <Text fontSize={'sm'} fontWeight={'light'}>
-        {formData?.description}
+        {formDataPreview?.description}
       </Text>
       {elements.map((element) => renderElement(element))}
     </Flex>

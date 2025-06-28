@@ -9,6 +9,8 @@ import { useHeaderFormContext } from '../../contexts/header-form.context';
 import { useEffect } from 'react';
 
 export function BuilderHeader() {
+  const { formData, formDataPreview, setFormDataPreview, save } = useHeaderFormContext();
+
   const formMethods = useForm<HeaderFormData>({
     resolver: zodResolver(headerFormSchema),
     mode: 'onChange',
@@ -18,19 +20,26 @@ export function BuilderHeader() {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = formMethods;
-  const { setFormData } = useHeaderFormContext();
 
   const name = watch('name');
   const description = watch('description');
 
   useEffect(() => {
-    setFormData({ name, description });
+    setFormDataPreview({ name, description, updated: false });
   }, [name, description]);
 
+  useEffect(() => {
+    reset({
+      name: formData?.name ?? '',
+      description: formData?.description ?? '',
+    });
+  }, [formData, reset]);
+
   const handleSave = (data: HeaderFormData) => {
-    console.log(data);
+    save(data);
   };
 
   return (
@@ -66,7 +75,7 @@ export function BuilderHeader() {
                 <MoreSettingsForm />
               </Flex>
             </Tooltip>
-            <Button type="submit" colorPalette="brand" variant="solid">
+            <Button type="submit" colorPalette="brand" variant="solid" disabled={formDataPreview?.updated}>
               <Save /> Salvar
             </Button>
             <Button colorPalette="brand" variant="outline">
