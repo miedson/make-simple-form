@@ -36,13 +36,15 @@ export function DragDropProvider({ children }: { children: ReactNode }) {
       element.id === id ? { ...element, ...data } : element
     );
     setElements(elementsUpdated);
-    localStorageFormData && updateFormLocalStore({ ...localStorageFormData, elements: elementsUpdated, updated })
+    localStorageFormData &&
+      updateFormLocalStore({ ...localStorageFormData, elements: elementsUpdated, updated });
   };
 
   const removeElementById = (id: string) => {
     const elementsFiltered = elements.filter((element) => element.id !== id);
     setElements(elementsFiltered);
-    localStorageFormData && updateFormLocalStore({ ...localStorageFormData, elements: elementsFiltered, updated });
+    localStorageFormData &&
+      updateFormLocalStore({ ...localStorageFormData, elements: elementsFiltered, updated });
   };
 
   return (

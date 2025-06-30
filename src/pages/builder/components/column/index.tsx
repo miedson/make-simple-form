@@ -5,20 +5,20 @@ type ColumnProps = {
   heading: string;
   description: string;
   children: ReactNode;
-} & Pick<FlexProps, 'bg' | 'backgroundColor'>;
+} & FlexProps;
 
 export function Column({ heading, description, children, ...props }: ColumnProps) {
   return (
     <Flex
       flexDir={'column'}
-      flex={1}
-      p={6}
-      gap={2}
       borderRight={'1px solid'}
       borderColor={'gray.200'}
       {...props}
     >
-      <Flex flexDir={'column'} mb={'1rem'}>
+      <Flex
+        padding={'1rem'}
+        flexDir={'column'}
+      >
         <Heading size={'md'} color={'gray.700'}>
           {heading}
         </Heading>
@@ -26,7 +26,14 @@ export function Column({ heading, description, children, ...props }: ColumnProps
           {description}
         </Text>
       </Flex>
-      {children}
+      <Flex
+        paddingBlock={3}
+        paddingInline={6}
+        gap={2}
+        flexDir={'column'}
+        overflow={'auto'}
+      >{children}
+      </Flex>
     </Flex>
   );
 }

@@ -9,7 +9,7 @@ import { useHeaderFormContext } from '../../contexts/header-form.context';
 import { useEffect } from 'react';
 
 export function BuilderHeader() {
-  const { formData, formDataPreview, setFormDataPreview, save } = useHeaderFormContext();
+  const { formData, formDataPreview, setFormDataPreview, save, isLoading } = useHeaderFormContext();
 
   const formMethods = useForm<HeaderFormData>({
     resolver: zodResolver(headerFormSchema),
@@ -54,7 +54,13 @@ export function BuilderHeader() {
       alignItems={'center'}
       justifyContent={'space-between'}
     >
-      <Text fontSize={'3xl'} fontWeight={'bold'} lineHeight={'1.2rem'} color={'brand.600'} mr={'1rem'}>
+      <Text
+        fontSize={'3xl'}
+        fontWeight={'bold'}
+        lineHeight={'1.2rem'}
+        color={'brand.600'}
+        mr={'1rem'}
+      >
         MakeSimpleForm
       </Text>
       <FormProvider {...formMethods}>
@@ -75,7 +81,13 @@ export function BuilderHeader() {
                 <MoreSettingsForm />
               </Flex>
             </Tooltip>
-            <Button type="submit" colorPalette="brand" variant="solid" disabled={formDataPreview?.updated}>
+            <Button
+              type="submit"
+              colorPalette="brand"
+              variant="solid"
+              disabled={formDataPreview?.updated}
+              loading={isLoading}
+            >
               <Save /> Salvar
             </Button>
             <Button colorPalette="brand" variant="outline">

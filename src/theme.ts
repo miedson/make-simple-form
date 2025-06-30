@@ -26,7 +26,7 @@ const buttonRecipe = defineRecipe({
     },
     colorScheme: {
       brand: {},
-      red: {}
+      red: {},
     },
   },
   defaultVariants: {
@@ -62,7 +62,7 @@ const config = defineConfig({
           700: { value: '#b91c1c' },
           800: { value: '#991b1b' },
           900: { value: '#7f1d1d' },
-        }
+        },
       },
       fonts: {
         heading: { value: 'Inter, system-ui, sans-serif' },

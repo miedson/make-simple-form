@@ -1,17 +1,16 @@
-import { Field, Input, VStack } from '@chakra-ui/react';
+import { Field, Input, VStack, type InputProps } from '@chakra-ui/react';
 
 type DynamicRadioProps = {
   label: string;
-  name: string;
-  placeholder: string;
-};
+  disabled: boolean;
+} & InputProps;
 
-export function DynamicInput({ label, placeholder, name }: DynamicRadioProps) {
+export function DynamicInput({ label, disabled, ...props }: DynamicRadioProps) {
   return (
     <VStack w={'full'}>
-      <Field.Root orientation="vertical">
+      <Field.Root orientation="vertical" disabled={disabled}>
         <Field.Label>{label}</Field.Label>
-        <Input placeholder={placeholder} name={name} />
+        <Input {...props} />
       </Field.Root>
     </VStack>
   );

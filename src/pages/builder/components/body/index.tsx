@@ -7,10 +7,11 @@ import { ViewingArea } from '../viewing-area';
 
 export function BuilderBody() {
   return (
-    <Flex w={'full'} h={'svh'} bg={'gray.50'}>
+    <Flex h={'full'} minH={0} bg={'gray.50'}>
       <Column
         heading="Elementos do Formulário"
         description="Arraste os elementos para o canvas para construir seu formulário"
+        flex={1}
       >
         <Element name="Campo de texto" icon={Type} type="input" />
         <Element name="Lista de opções" icon={ChevronDown} type="select" />
@@ -21,6 +22,7 @@ export function BuilderBody() {
       <Column
         heading="Canvas do Formulário"
         description="Arraste elementos aqui para construir seu formulário"
+        flex={1}
       >
         <AreaCanvas />
       </Column>
@@ -28,6 +30,7 @@ export function BuilderBody() {
         heading="Visualização"
         description="Visualização ao vivo do seu formulário"
         bg={'white'}
+        flex={1}
       >
         <ViewingArea />
       </Column>

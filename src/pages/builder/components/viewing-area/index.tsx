@@ -1,7 +1,8 @@
-import { Flex, Text } from '@chakra-ui/react';
+import { Button, Flex } from '@chakra-ui/react';
 import { useDragDropContext } from '../../contexts/drag-drop.context';
-import { useRenderElement } from '../../hooks/use-render-element';
 import { useHeaderFormContext } from '../../contexts/header-form.context';
+import { useRenderElement } from '../../hooks/use-render-element';
+import { HeaderForm } from '../header-form';
 
 export function ViewingArea() {
   const { elements } = useDragDropContext();
@@ -9,14 +10,22 @@ export function ViewingArea() {
   const { formDataPreview } = useHeaderFormContext();
 
   return (
-    <Flex w={'full'} minH={'18.75rem'} flexDir={'column'} gap={'1rem'}>
-      <Text fontSize={'lg'} fontWeight={'medium'}>
-        {formDataPreview?.name}
-      </Text>
-      <Text fontSize={'sm'} fontWeight={'light'}>
-        {formDataPreview?.description}
-      </Text>
-      {elements.map((element) => renderElement(element))}
+    <Flex w={'full'} flexDir={'column'} gap={'1rem'} mb={'1rem'}>
+      {formDataPreview?.name && <HeaderForm formData={formDataPreview} />}
+      <Flex flexDir={'column'} gap={'1rem'}>
+        {elements.map((element) => (
+          <Flex
+            w={'full'}
+            padding={'1rem'}
+            borderRadius={8}
+            border={'1px solid'}
+            borderColor={'gray.200'}
+          >
+            {renderElement(element)}
+          </Flex>
+        ))}
+      </Flex>
+      {formDataPreview && <Button>Enviar</Button>}
     </Flex>
   );
 }

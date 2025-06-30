@@ -17,7 +17,7 @@ export function Element({ name, icon, type }: ElementProps) {
     setMovedElement({
       id: crypto.randomUUID(),
       type,
-      isPreview: true
+      isPreview: true,
     });
   };
 
@@ -31,7 +31,7 @@ export function Element({ name, icon, type }: ElementProps) {
 
   return (
     <Flex
-      maxW={'20rem'}
+      maxW={'26rem'}
       bg={bgColor}
       borderRadius="lg"
       border={'1px solid'}
@@ -51,13 +51,7 @@ export function Element({ name, icon, type }: ElementProps) {
       draggable
       onDragStart={handleDragStart}
     >
-      <Icon
-        as={icon}
-        boxSize={5}
-        color={iconColor}
-        className="drag-icon"
-        transition="color 0.2s"
-      />
+      <Icon as={icon} boxSize={5} color={iconColor} className="drag-icon" transition="color 0.2s" />
       <Text
         fontSize="sm"
         fontWeight="medium"

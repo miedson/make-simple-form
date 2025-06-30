@@ -9,5 +9,5 @@ export type Element = {
     value: string;
   }[];
   required?: boolean;
-  isPreview?: boolean
+  isPreview?: boolean;
 };
