@@ -18,7 +18,7 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
   const formMethods = useForm<MovedElementValidationData>({
     resolver: zodResolver(movedElementValidationSchema),
   });
-  const { register, control, handleSubmit, reset } = formMethods;
+  const { register, control, handleSubmit, reset, formState: { errors } } = formMethods;
   const [open, setOpen] = useState(false);
 
   useImperativeHandle(ref, () => ({
@@ -53,22 +53,31 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
               </Drawer.Header>
               <Drawer.Body>
                 <Stack gap="8" maxW="sm">
-                  <Field.Root orientation="vertical">
-                    <Field.Label>Título do campo</Field.Label>
+                  <Field.Root orientation="vertical" required invalid={!!errors.label?.message}>
+                    <Field.Label>
+                      Título do campo
+                      <Field.RequiredIndicator />
+                    </Field.Label>
                     <Input placeholder="Ex: Nome completo	" {...register('label')} />
+                    <Field.ErrorText>{errors.label?.message}</Field.ErrorText>
                   </Field.Root>
 
-                  <Field.Root orientation="vertical">
-                    <Field.Label>Identificador interno</Field.Label>
+                  <Field.Root orientation="vertical" required invalid={!!errors.name?.message}>
+                    <Field.Label>
+                      Identificador interno
+                      <Field.RequiredIndicator />
+                    </Field.Label>
                     <Input placeholder="Ex: nome_completo" {...register('name')} />
+                    <Field.ErrorText>{errors.name?.message}</Field.ErrorText>
                   </Field.Root>
 
-                  <Field.Root orientation="vertical">
+                  <Field.Root orientation="vertical" invalid={!!errors.placeholder?.message}>
                     <Field.Label>Texto de ajuda</Field.Label>
                     <Input
                       placeholder="Ex: Digite seu nome completo aqui"
                       {...register('placeholder')}
                     />
+                    <Field.ErrorText>{errors.placeholder?.message}</Field.ErrorText>
                   </Field.Root>
 
                   {['select', 'radio', 'checkbox'].includes(movedElement?.type ?? '') && (
