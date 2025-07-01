@@ -11,21 +11,28 @@ export function ViewingArea() {
 
   return (
     <Flex w={'full'} flexDir={'column'} gap={'1rem'} mb={'1rem'}>
-      {formDataPreview?.name && <HeaderForm formData={formDataPreview} />}
-      <Flex flexDir={'column'} gap={'1rem'}>
-        {elements.map((element) => (
-          <Flex
-            w={'full'}
-            padding={'1rem'}
-            borderRadius={8}
-            border={'1px solid'}
-            borderColor={'gray.200'}
-          >
-            {renderElement(element)}
+      {formDataPreview?.name && (
+        <>
+          <HeaderForm formData={formDataPreview} />
+          <Flex flexDir={'column'} gap={'1rem'}>
+            {elements.map((element) => (
+              <Flex
+                key={element.id}
+                w={'full'}
+                padding={'1rem'}
+                borderRadius={8}
+                border={'1px solid'}
+                borderColor={'gray.200'}
+              >
+                {renderElement(element)}
+              </Flex>
+            ))}
           </Flex>
-        ))}
-      </Flex>
-      {formDataPreview && <Button>Enviar</Button>}
+          <Flex>
+            <Button disabled>Enviar</Button>
+          </Flex>
+        </>
+      )}
     </Flex>
   );
 }

@@ -6,4 +6,5 @@ export type FormData = {
   description: string | null;
   updated?: boolean;
   elements?: Element[];
+  published?: boolean;
 };

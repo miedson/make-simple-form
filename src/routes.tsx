@@ -18,7 +18,7 @@ export const AppRoutes = () => {
             </DragDropProvider>
           }
         />
-        <Route path='form/:id' element={<FormPage />} />
+        <Route path="form/:id" element={<FormPage />} />
       </Routes>
     </BrowserRouter>
   );

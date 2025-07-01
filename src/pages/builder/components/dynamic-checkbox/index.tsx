@@ -4,7 +4,7 @@ import type { OptionType } from '../../types/options.type';
 type DynamicCheckboxProps = {
   label: string;
   options: OptionType[];
-  disabled: boolean
+  disabled: boolean;
 };
 
 export function DynamicCheckbox({ label, options, disabled }: DynamicCheckboxProps) {
