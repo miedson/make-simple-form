@@ -25,10 +25,7 @@ export function DynamicInput({ label, name, placeholder, disabled, required, pre
           <Field.RequiredIndicator />
         </Field.Label>
         {formContext ? (
-          <>
-            <Input {...formContext?.register(name)} placeholder={placeholder} />
-            {/* <Field.ErrorText>{formContext?.formState.errors[name]?.message as string}</Field.ErrorText> */}
-          </>
+          <Input {...formContext?.register(name)} placeholder={placeholder} />
         ) : (
           <Input name={name} placeholder={placeholder} />
         )}

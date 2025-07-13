@@ -10,7 +10,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { generateSchema } from '../builder/components/element/elements.schema';
 import { Asterisk } from 'lucide-react';
-import type { OptionType } from '../builder/types/options.type';
+import { z } from 'zod';
 
 export function FormPage() {
   const { renderElement } = useRenderElement();
@@ -18,7 +18,7 @@ export function FormPage() {
   const { id } = useParams<{ id: string }>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [schema, setSchema] = useState<any>();
+  const [schema, setSchema] = useState<z.ZodObject<object, "strip", object> | undefined>();
 
   const formMethods = useForm({
     resolver: schema ? zodResolver(schema) : undefined,
@@ -28,7 +28,7 @@ export function FormPage() {
   const { handleSubmit, formState: { errors } } = formMethods;
 
   useEffect(() => {
-    id &&
+    if (id) {
       formService
         .findById(id)
         .then((response) => {
@@ -44,10 +44,11 @@ export function FormPage() {
             type: 'error',
           })
         );
+    }
   }, []);
 
-  const handleSave = (data: any) => {
-    const responses: Responses[] = data && Object.entries(data as Record<string, string | string[]>)
+  const handleSave = (data: Record<string, string | string[]>) => {
+    const responses: Responses[] = data ? Object.entries(data)
       .map(([id, value]) => {
         const element = formData?.elements?.find(element => element.id === id);
         return element && {
@@ -55,20 +56,22 @@ export function FormPage() {
           question: element.label,
           response: Array.isArray(value) ? element.options?.find(opt => opt.value === value[0]) : value
         }
-      });
+      }) : [];
     setIsLoading(true)
-    id && responseService.save(id, responses)
-      .then(() => toaster.create({
-        title: 'Sucesso',
-        description: 'Respostas salvas com sucesso',
-        type: 'success'
-      })).catch((error) => {
-        toaster.create({
-          title: 'Erro',
-          description: error.response.data.message ?? 'Erro ao salvar respostas',
-          type: 'error',
-        })
-      }).finally(() => setIsLoading(false))
+    if (id) {
+      responseService.save(id, responses)
+        .then(() => toaster.create({
+          title: 'Sucesso',
+          description: 'Respostas salvas com sucesso',
+          type: 'success'
+        })).catch((error) => {
+          toaster.create({
+            title: 'Erro',
+            description: error.response.data.message ?? 'Erro ao salvar respostas',
+            type: 'error',
+          })
+        }).finally(() => setIsLoading(false));
+    }
   };
 
   return (

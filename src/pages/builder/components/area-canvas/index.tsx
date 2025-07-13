@@ -78,7 +78,6 @@ export function AreaCanvas() {
                 {element.isPreview && (
                   <IconButton
                     aria-label="Remover elemento"
-                    children={<X size={16} />}
                     size="sm"
                     bg={'red.600'}
                     position="absolute"
@@ -89,7 +88,9 @@ export function AreaCanvas() {
                     onClick={() => removeElementById(element.id)}
                     transition="opacity 0.2s"
                     zIndex={1}
-                  />
+                  >
+                    <X size={16} />
+                  </IconButton>
                 )}
                 {renderElement(element)}
               </Flex>

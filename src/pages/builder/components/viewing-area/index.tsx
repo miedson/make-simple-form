@@ -7,13 +7,14 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { generateSchema } from '../element/elements.schema';
+import { z } from 'zod';
 
 export function ViewingArea() {
   const { elements } = useDragDropContext();
   const { renderElement } = useRenderElement();
   const { formDataPreview } = useHeaderFormContext();
 
-  const [schema, setSchema] = useState<any>();
+  const [schema, setSchema] = useState<z.ZodObject<object, "strip", object> | undefined>();
 
   const formMethods = useForm({
     resolver: schema ? zodResolver(schema) : undefined,

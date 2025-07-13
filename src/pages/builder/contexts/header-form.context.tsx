@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { useDataFormLocalStorage } from '../hooks/use-local-storage';
 import type { FormData } from '../types/form-data.type';
 import { useDragDropContext } from './drag-drop.context';
-import { appURL, baseURL, formService } from '../../../api/api';
+import { appURL, formService } from '../../../api/api';
 import { toaster } from '../../../components/ui/toaster';
 import {
   PublishSuccessModal,
@@ -33,7 +33,9 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
   const modalRef = useRef<PublishSuccessModalRef>(null);
 
   useEffect(() => {
-    localStorageFormData && setFormData(localStorageFormData);
+    if (localStorageFormData) {
+      setFormData(localStorageFormData);
+    }
   }, []);
 
   const save = (data: FormData) => {

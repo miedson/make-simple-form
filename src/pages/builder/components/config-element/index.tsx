@@ -35,7 +35,9 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
   const { movedElement, changeElement, removeElementById } = useDragDropContext();
 
   const handleCancel = () => {
-    movedElement && removeElementById(movedElement?.id);
+    if (movedElement) {
+      removeElementById(movedElement.id);
+    }
     setOpen(false);
   };
 
@@ -68,15 +70,6 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
                     <Field.ErrorText>{errors.label?.message}</Field.ErrorText>
                   </Field.Root>
 
-                  <Field.Root orientation="vertical" required invalid={!!errors.name?.message}>
-                    <Field.Label>
-                      Identificador interno
-                      <Field.RequiredIndicator />
-                    </Field.Label>
-                    <Input placeholder="Ex: nome_completo" {...register('name')} />
-                    <Field.ErrorText>{errors.name?.message}</Field.ErrorText>
-                  </Field.Root>
-
                   <Field.Root orientation="vertical" invalid={!!errors.placeholder?.message}>
                     <Field.Label>Texto de ajuda</Field.Label>
                     <Input
@@ -86,9 +79,9 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
                     <Field.ErrorText>{errors.placeholder?.message}</Field.ErrorText>
                   </Field.Root>
 
-                  {['select', 'radio', 'checkbox'].includes(movedElement?.type ?? '') && (
+                  {['select', 'radio', 'checkbox'].includes(movedElement?.type ?? '') ? (
                     <OptionsFieldArray />
-                  )}
+                  ) : null}
 
                   <Field.Root orientation="horizontal">
                     <Field.Label>Este campo é obrigatório?</Field.Label>
@@ -125,3 +118,5 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
     </Drawer.Root>
   );
 });
+
+ConfigElement.displayName = 'ConfigElement';

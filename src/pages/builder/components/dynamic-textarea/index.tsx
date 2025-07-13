@@ -1,5 +1,5 @@
-import { Controller, useFormContext } from 'react-hook-form';
 import { Field, Textarea, VStack } from '@chakra-ui/react';
+import { useFormContext } from 'react-hook-form';
 
 type DynamicTextareaProps = {
   label: string;
@@ -19,39 +19,23 @@ export function DynamicTextarea({
   preview,
 }: DynamicTextareaProps) {
   const formContext = preview ? undefined : useFormContext();
-
-  return formContext ? (
-    <VStack w="full">
+  return (
+    <VStack w={'full'}>
       <Field.Root
         orientation="vertical"
         required={required}
         disabled={disabled}
-        invalid={!!formContext.formState.errors[name]?.message}
+        invalid={formContext ? !!formContext?.formState.errors[name]?.message : false}
       >
         <Field.Label>
           {label}
-          {required && <Field.RequiredIndicator />}
+          <Field.RequiredIndicator />
         </Field.Label>
-        <Controller
-          name={name}
-          control={formContext.control}
-          render={({ field }) => (
-            <Textarea
-              {...field}
-              size="xl"
-              placeholder={placeholder}
-              disabled={disabled}
-            />
-          )}
-        />
-        {/* <Field.ErrorText>{formContext.formState.errors[name]?.message as string}</Field.ErrorText> */}
-      </Field.Root>
-    </VStack>
-  ) : (
-    <VStack w="full">
-      <Field.Root orientation="vertical" disabled={disabled}>
-        <Field.Label>{label}</Field.Label>
-        <Textarea size="xl" placeholder={placeholder} name={name} disabled={disabled} />
+        {formContext ? (
+          <Textarea {...formContext?.register(name)} placeholder={placeholder} />
+        ) : (
+          <Textarea name={name} placeholder={placeholder} />
+        )}
       </Field.Root>
     </VStack>
   );

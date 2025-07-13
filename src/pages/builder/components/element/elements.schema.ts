@@ -21,8 +21,6 @@ export function generateSchema(elements: Element[]) {
   for(const element of elements) {
     if(element.id) shape[element.id] = getSchemaElement(element);
   }
-
-  console.log(shape)
   
   return z.object(shape);
 }
