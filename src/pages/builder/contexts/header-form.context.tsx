@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { useDataFormLocalStorage } from '../hooks/use-local-storage';
 import type { FormData } from '../types/form-data.type';
 import { useDragDropContext } from './drag-drop.context';
-import { baseURL, formService } from '../../../api/api';
+import { appURL, baseURL, formService } from '../../../api/api';
 import { toaster } from '../../../components/ui/toaster';
 import {
   PublishSuccessModal,
@@ -41,7 +41,7 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
     const newOrUpdatedFormData =
       formData && formData.id
         ? { ...formData, ...data, elements, updated }
-        : { ...data, id: crypto.randomUUID(), updated, published: false };
+        : { ...data, id: crypto.randomUUID(), elements, updated, published: false };
 
     setIsLoading(true);
     formService
@@ -72,11 +72,11 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
       formService
         .publish(formData.id)
         .then((id) => {
-          setUrl(`${baseURL}/${id}`);
+          setUrl(`${appURL}/form/${id}`);
           modalRef.current?.open();
-          setFormData(undefined);
-          setFormDataPreview(undefined);
-          localStorage.removeItem('form');
+          // setFormData(undefined);
+          // setFormDataPreview(undefined);
+          // localStorage.removeItem('form');
         })
         .catch((error) =>
           toaster.create({

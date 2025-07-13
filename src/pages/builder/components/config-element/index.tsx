@@ -18,7 +18,13 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
   const formMethods = useForm<MovedElementValidationData>({
     resolver: zodResolver(movedElementValidationSchema),
   });
-  const { register, control, handleSubmit, reset, formState: { errors } } = formMethods;
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = formMethods;
   const [open, setOpen] = useState(false);
 
   useImperativeHandle(ref, () => ({

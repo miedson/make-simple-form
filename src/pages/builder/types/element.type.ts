@@ -1,8 +1,8 @@
 export type Element = {
   id: string;
-  type: 'input' | 'select' | 'radio' | 'checkbox' | 'textarea';
+  type: AvailableTypes;
   label?: string | null;
-  name?: string | null;
+  name?: string;
   placeholder?: string | null;
   options?: {
     label: string;
@@ -11,3 +11,5 @@ export type Element = {
   required?: boolean;
   isPreview?: boolean;
 };
+
+export type AvailableTypes = 'input' | 'select' | 'radio' | 'checkbox' | 'textarea';

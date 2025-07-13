@@ -1,16 +1,37 @@
-import { Field, Input, VStack, type InputProps } from '@chakra-ui/react';
+import { Field, Input, VStack } from '@chakra-ui/react';
+import { useFormContext } from 'react-hook-form';
 
 type DynamicRadioProps = {
   label: string;
+  name: string;
+  placeholder: string;
   disabled: boolean;
-} & InputProps;
+  required: boolean;
+  preview: boolean;
+};
 
-export function DynamicInput({ label, disabled, ...props }: DynamicRadioProps) {
+export function DynamicInput({ label, name, placeholder, disabled, required, preview }: DynamicRadioProps) {
+  const formContext = preview ? undefined : useFormContext();
   return (
     <VStack w={'full'}>
-      <Field.Root orientation="vertical" disabled={disabled}>
-        <Field.Label>{label}</Field.Label>
-        <Input {...props} />
+      <Field.Root
+        orientation="vertical"
+        required={required}
+        disabled={disabled}
+        invalid={formContext ? !!formContext?.formState.errors[name]?.message : false}
+      >
+        <Field.Label>
+          {label}
+          <Field.RequiredIndicator />
+        </Field.Label>
+        {formContext ? (
+          <>
+            <Input {...formContext?.register(name)} placeholder={placeholder} />
+            {/* <Field.ErrorText>{formContext?.formState.errors[name]?.message as string}</Field.ErrorText> */}
+          </>
+        ) : (
+          <Input name={name} placeholder={placeholder} />
+        )}
       </Field.Root>
     </VStack>
   );
