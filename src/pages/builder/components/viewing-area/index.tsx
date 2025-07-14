@@ -1,13 +1,14 @@
-import { Button, Flex } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { useDragDropContext } from '../../contexts/drag-drop.context';
 import { useHeaderFormContext } from '../../contexts/header-form.context';
 import { useRenderElement } from '../../hooks/use-render-element';
-import { HeaderForm } from '../header-form';
-import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
 import { generateSchema } from '../element/elements.schema';
-import { z } from 'zod';
+import { FooterForm } from '../footer-form';
+import { HeaderForm } from '../header-form';
 
 export function ViewingArea() {
   const { elements } = useDragDropContext();
@@ -29,8 +30,7 @@ export function ViewingArea() {
     <FormProvider {...formMethods}>
       <Flex as={'form'} w={'full'} flexDir={'column'} gap={'1rem'} mb={'1rem'}>
         {formDataPreview?.name && (
-          <>
-            <HeaderForm formData={formDataPreview} />
+          <HeaderForm formData={formDataPreview}>
             <Flex flexDir={'column'} gap={'1rem'}>
               {elements.map((element) => (
                 <Flex
@@ -44,11 +44,9 @@ export function ViewingArea() {
                   {renderElement(element)}
                 </Flex>
               ))}
+              <FooterForm preview={true} />
             </Flex>
-            <Flex>
-              <Button disabled>Enviar</Button>
-            </Flex>
-          </>
+          </HeaderForm>
         )}
       </Flex>
     </FormProvider>

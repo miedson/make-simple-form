@@ -29,7 +29,7 @@ export function DynamicCheckbox({
     });
 
   return formContext ? (
-    <Fieldset.Root>
+    <Fieldset.Root w={'full'}>
       <Field.Root required={required}>
         <Field.Label>
           {label}
@@ -54,7 +54,7 @@ export function DynamicCheckbox({
       </CheckboxGroup>
     </Fieldset.Root>
   ) : (
-    <Field.Root required={required} disabled={disabled}>
+    <Field.Root w={'full'} required={required} disabled={disabled}>
       <Field.Label>
         {label}
         <Field.RequiredIndicator />

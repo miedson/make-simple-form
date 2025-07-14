@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
-import { useDataFormLocalStorage } from '../hooks/use-local-storage';
+import { useLocalStorage } from '../hooks/use-local-storage';
 import type { FormData } from '../types/form-data.type';
 import { useDragDropContext } from './drag-drop.context';
 import { appURL, formService } from '../../../api/api';
@@ -26,15 +26,17 @@ const HeaderFormContext = createContext<HeaderFormContextType>({} as HeaderFormC
 export function FormContexProvider({ children }: { children: ReactNode }) {
   const [formData, setFormData] = useState<FormData>();
   const [formDataPreview, setFormDataPreview] = useState<DataFormPreview>();
-  const { localStorageFormData, updateFormLocalStore } = useDataFormLocalStorage();
+  const { getLocalStorageData, updateLocalStore } = useLocalStorage<FormData>();
+  const [localStorageData, setLocalStorageData] = useState<FormData | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [url, setUrl] = useState('');
   const { elements } = useDragDropContext();
   const modalRef = useRef<PublishSuccessModalRef>(null);
 
   useEffect(() => {
-    if (localStorageFormData) {
-      setFormData(localStorageFormData);
+    setLocalStorageData(getLocalStorageData('form'));
+    if (localStorageData) {
+      setFormData(localStorageData);
     }
   }, []);
 
@@ -55,7 +57,7 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
       .then(() => {
         setFormData(newOrUpdatedFormData);
         setFormDataPreview(newOrUpdatedFormData);
-        updateFormLocalStore(newOrUpdatedFormData);
+        updateLocalStore('form', newOrUpdatedFormData);
         toaster.create({
           title: 'Sucesso',
           type: 'success',
