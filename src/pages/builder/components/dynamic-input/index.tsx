@@ -10,7 +10,14 @@ type DynamicRadioProps = {
   preview: boolean;
 };
 
-export function DynamicInput({ label, name, placeholder, disabled, required, preview }: DynamicRadioProps) {
+export function DynamicInput({
+  label,
+  name,
+  placeholder,
+  disabled,
+  required,
+  preview,
+}: DynamicRadioProps) {
   const formContext = preview ? undefined : useFormContext();
   return (
     <VStack w={'full'}>

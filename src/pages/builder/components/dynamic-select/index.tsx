@@ -47,7 +47,6 @@ export function DynamicSelect({
                 name={field.name}
                 value={field.value}
                 onValueChange={({ value }) => {
-                  console.log(value);
                   return field.onChange(value);
                 }}
                 onInteractOutside={() => field.onBlur()}
@@ -107,4 +106,3 @@ export function DynamicSelect({
     </VStack>
   );
 }
-

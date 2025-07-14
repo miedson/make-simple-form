@@ -18,14 +18,17 @@ export function FormPage() {
   const { id } = useParams<{ id: string }>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [schema, setSchema] = useState<z.ZodObject<object, "strip", object> | undefined>();
+  const [schema, setSchema] = useState<z.ZodObject<z.ZodRawShape> | undefined>();
 
   const formMethods = useForm({
     resolver: schema ? zodResolver(schema) : undefined,
     mode: 'onSubmit',
   });
 
-  const { handleSubmit, formState: { errors } } = formMethods;
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = formMethods;
 
   useEffect(() => {
     if (id) {
@@ -48,29 +51,44 @@ export function FormPage() {
   }, []);
 
   const handleSave = (data: Record<string, string | string[]>) => {
-    const responses: Responses[] = data ? Object.entries(data)
-      .map(([id, value]) => {
-        const element = formData?.elements?.find(element => element.id === id);
-        return element && {
-          element_id: element.id,
-          question: element.label,
-          response: Array.isArray(value) ? element.options?.find(opt => opt.value === value[0]) : value
-        }
-      }) : [];
-    setIsLoading(true)
+    const responses: Responses[] = data
+      ? Object.entries(data).map(([id, value]) => {
+        const element = formData?.elements?.find((element) => element.id === id);
+        const response = element?.options?.length
+          ? [value].flatMap(v => v).map((v) => {
+            const { label, value } = element?.options?.find((e) => e.value == v) ?? {};
+            return { description: label, value }
+          })
+          : value;
+
+        return {
+          element_id: element?.id ?? '',
+          question: element?.label,
+          response,
+        };
+      })
+      : [];
+
+    setIsLoading(true);
+
     if (id) {
-      responseService.save(id, responses)
-        .then(() => toaster.create({
-          title: 'Sucesso',
-          description: 'Respostas salvas com sucesso',
-          type: 'success'
-        })).catch((error) => {
+      responseService
+        .save(id, responses)
+        .then(() =>
+          toaster.create({
+            title: 'Sucesso',
+            description: 'Respostas salvas com sucesso',
+            type: 'success',
+          })
+        )
+        .catch((error) => {
           toaster.create({
             title: 'Erro',
             description: error.response.data.message ?? 'Erro ao salvar respostas',
             type: 'error',
-          })
-        }).finally(() => setIsLoading(false));
+          });
+        })
+        .finally(() => setIsLoading(false));
     }
   };
 
@@ -85,8 +103,8 @@ export function FormPage() {
         justifyContent={'center'}
       >
         <FormProvider {...formMethods}>
-          <Flex w={'60rem'} flexDir={'column'} >
-            <form onSubmit={handleSubmit(handleSave)} noValidate >
+          <Flex w={'60rem'} flexDir={'column'}>
+            <form onSubmit={handleSubmit(handleSave)} noValidate>
               <Flex flexDir={'column'} gap={'1rem'}>
                 <HeaderForm formData={formData} />
                 <Flex flexDir={'column'} gap={'1rem'}>
@@ -103,7 +121,7 @@ export function FormPage() {
                     </Flex>
                   ))}
                 </Flex>
-                {Object.keys(errors).length > 0 &&
+                {Object.keys(errors).length > 0 && (
                   <Flex
                     w={'full'}
                     h={'3rem'}
@@ -117,9 +135,11 @@ export function FormPage() {
                     <Asterisk />
                     <Text>Verifique os campos obrigatórios não preenchidos</Text>
                   </Flex>
-                }
+                )}
                 <Flex>
-                  <Button type="submit" loading={isLoading}>Enviar</Button>
+                  <Button type="submit" loading={isLoading}>
+                    Enviar
+                  </Button>
                 </Flex>
               </Flex>
             </form>

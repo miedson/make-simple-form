@@ -45,7 +45,11 @@ export function DynamicRadio({
               >
                 <HStack gap="6">
                   {options.map((option) => (
-                    <RadioGroup.Item key={option.value} value={option.value ?? ''} disabled={disabled}>
+                    <RadioGroup.Item
+                      key={option.value}
+                      value={option.value ?? ''}
+                      disabled={disabled}
+                    >
                       <RadioGroup.ItemHiddenInput />
                       <RadioGroup.ItemIndicator />
                       <RadioGroup.ItemText>{option.label}</RadioGroup.ItemText>

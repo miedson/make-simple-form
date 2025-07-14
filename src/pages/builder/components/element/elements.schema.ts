@@ -14,13 +14,13 @@ export function generateSchema(elements: Element[]) {
       radio: element.required ? string : optional,
       select: element.required ? stringArray : optional,
       checkbox: element.required ? stringArray : optional,
-  }
+    };
     return schemas[element.type as keyof typeof schemas] ?? z.any();
-}
+  };
 
-  for(const element of elements) {
-    if(element.id) shape[element.id] = getSchemaElement(element);
+  for (const element of elements) {
+    if (element.id) shape[element.id] = getSchemaElement(element);
   }
-  
+
   return z.object(shape);
 }

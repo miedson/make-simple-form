@@ -14,7 +14,7 @@ export function ViewingArea() {
   const { renderElement } = useRenderElement();
   const { formDataPreview } = useHeaderFormContext();
 
-  const [schema, setSchema] = useState<z.ZodObject<object, "strip", object> | undefined>();
+  const [schema, setSchema] = useState<z.ZodObject<z.ZodRawShape> | undefined>();
 
   const formMethods = useForm({
     resolver: schema ? zodResolver(schema) : undefined,

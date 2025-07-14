@@ -1,6 +1,5 @@
 import axios from 'axios';
 import type { FormData } from '../pages/builder/types/form-data.type';
-import type { OptionType } from '../pages/builder/types/options.type';
 
 export const baseURL = import.meta.env.VITE_BACKEND_URL;
 export const appURL = import.meta.env.VITE_APP_URL;
@@ -9,11 +8,16 @@ const api = axios.create({
   baseURL,
 });
 
+type OptionResponseType = {
+  description: string | undefined;
+        value: string | undefined;
+}
+
 export type Responses = {
   element_id: string;
-  question: string | null | undefined;
-  response: string | OptionType | OptionType[] | undefined
-}
+    question: string | null | undefined;
+    response: string | string[] | OptionResponseType[];
+};
 
 export const formService = {
   create: async (data: FormData) =>
@@ -38,6 +42,8 @@ export const formService = {
 
 export const responseService = {
   save: async (formId: string, data: Responses[]) => {
-    await api.post(`responses/${formId}/save`, data).catch((error) => {throw error})
-  }
-}
+    await api.post(`responses/${formId}/save`, data).catch((error) => {
+      throw error;
+    });
+  },
+};

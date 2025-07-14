@@ -38,6 +38,10 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  useEffect(() => {
+    if (formData) setFormData({ ...formData, updated: false });
+  }, [elements]);
+
   const save = (data: FormData) => {
     const updated = true;
     const newOrUpdatedFormData =
