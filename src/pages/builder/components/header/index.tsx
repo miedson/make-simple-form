@@ -27,15 +27,23 @@ export function BuilderHeader() {
 
   const name = watch('name');
   const description = watch('description');
+  const itemsPerPage = watch('itemsPerPage');
 
   useEffect(() => {
-    setFormDataPreview({ name, description, updated: false, published: formData?.published });
-  }, [name, description]);
+    setFormDataPreview({
+      name,
+      description,
+      updated: false,
+      published: formData?.published,
+      itemsPerPage,
+    });
+  }, [name, description, itemsPerPage]);
 
   useEffect(() => {
     reset({
       name: formData?.name ?? '',
       description: formData?.description ?? '',
+      itemsPerPage: formData?.itemsPerPage,
     });
   }, [formData, reset]);
 

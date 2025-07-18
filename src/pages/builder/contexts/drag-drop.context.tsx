@@ -23,7 +23,8 @@ export function DragDropProvider({ children }: { children: ReactNode }) {
   const updated = false;
 
   useEffect(() => {
-    setLocalStorageData(getLocalStorageData('form'));
+    const localStorageData = getLocalStorageData('form');
+    setLocalStorageData(localStorageData);
     if (!elements.length && localStorageData) {
       setElements(localStorageData.elements ?? []);
     }

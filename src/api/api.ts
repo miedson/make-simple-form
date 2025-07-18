@@ -10,13 +10,13 @@ const api = axios.create({
 
 type OptionResponseType = {
   description: string | undefined;
-        value: string | undefined;
-}
+  value: string | undefined;
+};
 
 export type Responses = {
   element_id: string;
-    question: string | null | undefined;
-    response: string | string[] | OptionResponseType[];
+  question: string | null | undefined;
+  response: string | string[] | OptionResponseType[];
 };
 
 export const formService = {

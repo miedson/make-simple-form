@@ -2,7 +2,7 @@ import { Flex, Box, Text } from '@chakra-ui/react';
 import type { FormData } from '../../types/form-data.type';
 import type { ReactNode } from 'react';
 
-export function HeaderForm({ formData, children }: { formData: FormData, children: ReactNode }) {
+export function HeaderForm({ formData, children }: { formData: FormData; children: ReactNode }) {
   return (
     <Flex
       flexDir={'column'}
@@ -16,7 +16,7 @@ export function HeaderForm({ formData, children }: { formData: FormData, childre
       mb={'1rem'}
     >
       <Flex minW={'10rem'} maxW={'60rem'} flexDir={'column'} alignItems={'center'} gap={'1rem'}>
-        < Box
+        <Box
           w={'full'}
           height={'10px'}
           position={'absolute'}
@@ -41,6 +41,6 @@ export function HeaderForm({ formData, children }: { formData: FormData, childre
         bottom={0}
         borderBottomRadius={8}
       />
-    </Flex >
+    </Flex>
   );
 }

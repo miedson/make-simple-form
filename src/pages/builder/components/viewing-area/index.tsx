@@ -9,6 +9,8 @@ import { useRenderElement } from '../../hooks/use-render-element';
 import { generateSchema } from '../element/elements.schema';
 import { FooterForm } from '../footer-form';
 import { HeaderForm } from '../header-form';
+import { usePagination } from '../../hooks/use-pagination';
+import type { Element } from '../../types/element.type';
 
 export function ViewingArea() {
   const { elements } = useDragDropContext();
@@ -26,13 +28,18 @@ export function ViewingArea() {
     setSchema(generateSchema(elements ?? []));
   }, []);
 
+  const { paginatedData, pagination } = usePagination<Element>({
+    data: elements,
+    itemsPerPage: Number(formDataPreview?.itemsPerPage),
+  });
+
   return (
     <FormProvider {...formMethods}>
       <Flex as={'form'} w={'full'} flexDir={'column'} gap={'1rem'} mb={'1rem'}>
         {formDataPreview?.name && (
           <HeaderForm formData={formDataPreview}>
-            <Flex flexDir={'column'} gap={'1rem'}>
-              {elements.map((element) => (
+            <Flex w={'full'} flexDir={'column'} gap={'1rem'}>
+              {paginatedData.map((element) => (
                 <Flex
                   key={element.id}
                   w={'full'}
@@ -44,7 +51,7 @@ export function ViewingArea() {
                   {renderElement(element)}
                 </Flex>
               ))}
-              <FooterForm preview={true} />
+              <FooterForm preview={true} pagination={pagination} />
             </Flex>
           </HeaderForm>
         )}

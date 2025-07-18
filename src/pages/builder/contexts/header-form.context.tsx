@@ -9,7 +9,10 @@ import {
   type PublishSuccessModalRef,
 } from '../components/publish-sucess-modal';
 
-type DataFormPreview = Pick<FormData, 'name' | 'description' | 'updated' | 'published'>;
+type DataFormPreview = Pick<
+  FormData,
+  'name' | 'description' | 'updated' | 'published' | 'itemsPerPage'
+>;
 
 type HeaderFormContextType = {
   formData: FormData | undefined;
@@ -27,14 +30,13 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
   const [formData, setFormData] = useState<FormData>();
   const [formDataPreview, setFormDataPreview] = useState<DataFormPreview>();
   const { getLocalStorageData, updateLocalStore } = useLocalStorage<FormData>();
-  const [localStorageData, setLocalStorageData] = useState<FormData | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [url, setUrl] = useState('');
   const { elements } = useDragDropContext();
   const modalRef = useRef<PublishSuccessModalRef>(null);
 
   useEffect(() => {
-    setLocalStorageData(getLocalStorageData('form'));
+    const localStorageData = getLocalStorageData('form');
     if (localStorageData) {
       setFormData(localStorageData);
     }
