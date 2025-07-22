@@ -3,7 +3,11 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import type { MovedElementValidationData } from '../../form-config-element.schema';
 
 export function OptionsFieldArray() {
-  const { register, control } = useFormContext<MovedElementValidationData>();
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext<MovedElementValidationData>();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -11,24 +15,29 @@ export function OptionsFieldArray() {
   });
 
   return (
-    <Stack gap={4} maxW={'sm'}>
-      {fields.map((field, index) => (
-        <Flex key={field.id} gap="2" align="flex-end">
-          <Field.Root orientation="vertical">
-            <Field.Label>Descrição</Field.Label>
-            <Input {...register(`options.${index}.label`)} placeholder="Ex: Opção1" />
-          </Field.Root>
+    <Stack>
+      <Field.Root invalid={!!errors.options?.root?.message}>
+        {fields.map((field, index) => (
+          <Flex key={field.id} gap="2" align="flex-end">
+            <Field.Root orientation="vertical">
+              <Field.Label>Descrição</Field.Label>
+              <Input {...register(`options.${index}.label`)} placeholder="Ex: Nome da opção" />
+            </Field.Root>
 
-          <Field.Root orientation="vertical">
-            <Field.Label>Valor</Field.Label>
-            <Input {...register(`options.${index}.value`)} placeholder="1" />
-          </Field.Root>
+            <Field.Root orientation="vertical">
+              <Field.Label>Valor</Field.Label>
+              <Input {...register(`options.${index}.value`)} placeholder="1" />
+            </Field.Root>
 
-          <CloseButton onClick={() => remove(index)} />
-        </Flex>
-      ))}
+            <CloseButton onClick={() => remove(index)} />
+          </Flex>
+        ))}
 
-      <Button onClick={() => append({ label: '', value: '' })}>Adicionar opção</Button>
+        <Button w={'full'} onClick={() => append({ label: '', value: '' })}>
+          Adicionar opção
+        </Button>
+        <Field.ErrorText>{errors.options?.root?.message}</Field.ErrorText>
+      </Field.Root>
     </Stack>
   );
 }

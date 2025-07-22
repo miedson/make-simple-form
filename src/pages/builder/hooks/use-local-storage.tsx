@@ -1,13 +1,11 @@
-import type { FormData } from '../types/form-data.type';
+export function useLocalStorage<T>() {
+  const getLocalStorageData = (name: string) => {
+    const dataLocalStorage = localStorage.getItem(name) ?? localStorage.setItem(name, '');
+    return dataLocalStorage ? (JSON.parse(dataLocalStorage) as T) : undefined;
+  };
 
-export function useDataFormLocalStorage() {
-  const dataFormLocalStorage = localStorage.getItem('form');
-  const localStorageFormData = dataFormLocalStorage
-    ? (JSON.parse(dataFormLocalStorage) as FormData)
-    : undefined;
+  const updateLocalStore = (name: string, newData: T) =>
+    localStorage.setItem(name, JSON.stringify({ ...newData }));
 
-  const updateFormLocalStore = (newDataForm: FormData) =>
-    localStorage.setItem('form', JSON.stringify({ ...newDataForm }));
-
-  return { localStorageFormData, updateFormLocalStore };
+  return { getLocalStorageData, updateLocalStore };
 }

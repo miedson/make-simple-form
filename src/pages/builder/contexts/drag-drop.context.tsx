@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { MovedElementValidationData } from '../components/config-element/form-config-element.schema';
-import { useDataFormLocalStorage } from '../hooks/use-local-storage';
+import { useLocalStorage } from '../hooks/use-local-storage';
 import type { Element } from '../types/element.type';
+import type { FormData } from '../types/form-data.type';
 
 type DragDropContextType = {
   movedElement?: Element;
@@ -17,18 +18,23 @@ export const DragDropContext = createContext<DragDropContextType>({} as DragDrop
 export function DragDropProvider({ children }: { children: ReactNode }) {
   const [movedElement, setMovedElement] = useState<Element>();
   const [elements, setElements] = useState<Element[]>([]);
-  const { localStorageFormData, updateFormLocalStore } = useDataFormLocalStorage();
+  const { getLocalStorageData, updateLocalStore } = useLocalStorage<FormData>();
+  const [localStorageData, setLocalStorageData] = useState<FormData | undefined>();
   const updated = false;
 
   useEffect(() => {
-    if (!elements.length && localStorageFormData) {
-      setElements(localStorageFormData.elements ?? []);
+    const localStorageData = getLocalStorageData('form');
+    setLocalStorageData(localStorageData);
+    if (!elements.length && localStorageData) {
+      setElements(localStorageData.elements ?? []);
     }
   }, []);
 
   const addElement = (element: Element) => {
     setElements([...elements, element]);
-    localStorageFormData && updateFormLocalStore({ ...localStorageFormData, elements, updated });
+    if (localStorageData) {
+      updateLocalStore('form', { ...localStorageData, elements, updated });
+    }
   };
 
   const changeElement = (id: string, data: MovedElementValidationData) => {
@@ -36,15 +42,17 @@ export function DragDropProvider({ children }: { children: ReactNode }) {
       element.id === id ? { ...element, ...data } : element
     );
     setElements(elementsUpdated);
-    localStorageFormData &&
-      updateFormLocalStore({ ...localStorageFormData, elements: elementsUpdated, updated });
+    if (localStorageData) {
+      updateLocalStore('form', { ...localStorageData, elements: elementsUpdated, updated });
+    }
   };
 
   const removeElementById = (id: string) => {
     const elementsFiltered = elements.filter((element) => element.id !== id);
     setElements(elementsFiltered);
-    localStorageFormData &&
-      updateFormLocalStore({ ...localStorageFormData, elements: elementsFiltered, updated });
+    if (localStorageData) {
+      updateLocalStore('form', { ...localStorageData, elements: elementsFiltered, updated });
+    }
   };
 
   return (

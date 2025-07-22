@@ -1,18 +1,20 @@
 import { z } from 'zod';
 
 export const movedElementValidationSchema = z.object({
-  label: z.string().nullable(),
-  name: z.string()
-  .nonempty({message: 'Informe um valor para identificação interna'})
-  .regex(/^[^\s]*$/, 'Não deve conter espaços. Use "_" no lugar'),
-  placeholder: z.string()
-  .nonempty({message: 'Informe um titulo para o campo'}),
+  label: z.string().nonempty({ message: 'Informe um titulo para o campo' }),
+  placeholder: z.string().nullable(),
   options: z
     .array(
       z.object({
         label: z.string(),
         value: z.string(),
       })
+    )
+    .refine(
+      (options) => options.every((option) => option.label.length > 0 && option.value.length > 0),
+      {
+        message: 'Todas as opções devem ter descrição e valor preenchidos.',
+      }
     )
     .optional(),
   required: z.boolean().optional(),

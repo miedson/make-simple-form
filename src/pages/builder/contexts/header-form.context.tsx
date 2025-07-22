@@ -1,15 +1,18 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
-import { useDataFormLocalStorage } from '../hooks/use-local-storage';
+import { useLocalStorage } from '../hooks/use-local-storage';
 import type { FormData } from '../types/form-data.type';
 import { useDragDropContext } from './drag-drop.context';
-import { baseURL, formService } from '../../../api/api';
+import { appURL, formService } from '../../../api/api';
 import { toaster } from '../../../components/ui/toaster';
 import {
   PublishSuccessModal,
   type PublishSuccessModalRef,
 } from '../components/publish-sucess-modal';
 
-type DataFormPreview = Pick<FormData, 'name' | 'description' | 'updated' | 'published'>;
+type DataFormPreview = Pick<
+  FormData,
+  'name' | 'description' | 'updated' | 'published' | 'itemsPerPage'
+>;
 
 type HeaderFormContextType = {
   formData: FormData | undefined;
@@ -26,22 +29,29 @@ const HeaderFormContext = createContext<HeaderFormContextType>({} as HeaderFormC
 export function FormContexProvider({ children }: { children: ReactNode }) {
   const [formData, setFormData] = useState<FormData>();
   const [formDataPreview, setFormDataPreview] = useState<DataFormPreview>();
-  const { localStorageFormData, updateFormLocalStore } = useDataFormLocalStorage();
+  const { getLocalStorageData, updateLocalStore } = useLocalStorage<FormData>();
   const [isLoading, setIsLoading] = useState(false);
   const [url, setUrl] = useState('');
   const { elements } = useDragDropContext();
   const modalRef = useRef<PublishSuccessModalRef>(null);
 
   useEffect(() => {
-    localStorageFormData && setFormData(localStorageFormData);
+    const localStorageData = getLocalStorageData('form');
+    if (localStorageData) {
+      setFormData(localStorageData);
+    }
   }, []);
+
+  useEffect(() => {
+    if (formData) setFormData({ ...formData, updated: false });
+  }, [elements]);
 
   const save = (data: FormData) => {
     const updated = true;
     const newOrUpdatedFormData =
       formData && formData.id
         ? { ...formData, ...data, elements, updated }
-        : { ...data, id: crypto.randomUUID(), updated, published: false };
+        : { ...data, id: crypto.randomUUID(), elements, updated, published: false };
 
     setIsLoading(true);
     formService
@@ -49,7 +59,7 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
       .then(() => {
         setFormData(newOrUpdatedFormData);
         setFormDataPreview(newOrUpdatedFormData);
-        updateFormLocalStore(newOrUpdatedFormData);
+        updateLocalStore('form', newOrUpdatedFormData);
         toaster.create({
           title: 'Sucesso',
           type: 'success',
@@ -72,11 +82,11 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
       formService
         .publish(formData.id)
         .then((id) => {
-          setUrl(`${baseURL}/${id}`);
+          setUrl(`${appURL}/form/${id}`);
           modalRef.current?.open();
-          setFormData(undefined);
-          setFormDataPreview(undefined);
-          localStorage.removeItem('form');
+          // setFormData(undefined);
+          // setFormDataPreview(undefined);
+          // localStorage.removeItem('form');
         })
         .catch((error) =>
           toaster.create({
