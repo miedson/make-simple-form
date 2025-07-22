@@ -1,15 +1,6 @@
 import { Checkbox, CheckboxGroup, Field, Fieldset, Stack } from '@chakra-ui/react';
 import { useController, useFormContext } from 'react-hook-form';
-import type { OptionType } from '../../types/options.type';
-
-type DynamicCheckboxProps = {
-  label: string;
-  name: string;
-  options: OptionType[];
-  disabled: boolean;
-  required: boolean;
-  preview: boolean;
-};
+import type { DynamicProps } from '../../types/dynamic-props';
 
 export function DynamicCheckbox({
   label,
@@ -18,7 +9,7 @@ export function DynamicCheckbox({
   disabled,
   required,
   preview,
-}: DynamicCheckboxProps) {
+}: DynamicProps) {
   const formContext = preview ? undefined : useFormContext();
 
   const optionsController =

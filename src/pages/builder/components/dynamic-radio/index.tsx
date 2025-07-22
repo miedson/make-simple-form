@@ -1,15 +1,6 @@
 import { Field, HStack, RadioGroup, VStack } from '@chakra-ui/react';
-import type { OptionType } from '../../types/options.type';
 import { Controller, useFormContext } from 'react-hook-form';
-
-type DynamicRadioProps = {
-  label?: string;
-  name: string;
-  preview: boolean;
-  options: OptionType[];
-  disabled: boolean;
-  required: boolean;
-};
+import type { DynamicProps } from '../../types/dynamic-props';
 
 export function DynamicRadio({
   label,
@@ -18,7 +9,7 @@ export function DynamicRadio({
   options,
   disabled,
   required,
-}: DynamicRadioProps) {
+}: DynamicProps) {
   const formContext = preview ? undefined : useFormContext();
   return (
     <VStack w={'full'}>

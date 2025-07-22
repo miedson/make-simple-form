@@ -1,14 +1,6 @@
 import { Field, Textarea, VStack } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
-
-type DynamicTextareaProps = {
-  label: string;
-  name: string;
-  placeholder: string;
-  disabled: boolean;
-  required: boolean;
-  preview: boolean;
-};
+import type { DynamicProps } from '../../types/dynamic-props';
 
 export function DynamicTextarea({
   label,
@@ -17,7 +9,7 @@ export function DynamicTextarea({
   disabled,
   required,
   preview,
-}: DynamicTextareaProps) {
+}: DynamicProps) {
   const formContext = preview ? undefined : useFormContext();
   return (
     <VStack w={'full'}>

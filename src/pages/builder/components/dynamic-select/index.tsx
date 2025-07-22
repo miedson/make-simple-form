@@ -1,17 +1,7 @@
 import { createListCollection, Field, Portal, Select, VStack } from '@chakra-ui/react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { OptionType } from '../../types/options.type';
-
-type DynamicSelectProps = {
-  label: string;
-  name: string;
-  placeholder: string;
-  disabled: boolean;
-  required: boolean;
-  preview: boolean;
-  options: OptionType[];
-};
-
+import type { DynamicProps } from '../../types/dynamic-props';
 export function DynamicSelect({
   label,
   name,
@@ -20,7 +10,7 @@ export function DynamicSelect({
   required,
   preview,
   options,
-}: DynamicSelectProps) {
+}: DynamicProps) {
   const formContext = preview ? undefined : useFormContext();
   const optionsCollection = createListCollection<OptionType>({
     items: options,
