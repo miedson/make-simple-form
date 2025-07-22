@@ -2,15 +2,6 @@ import { Field, Input, VStack } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
 import type { DynamicProps } from '../../types/dynamic-props';
 
-// type DynamicRadioProps = {
-//   label: string;
-//   name: string;
-//   placeholder: string;
-//   disabled: boolean;
-//   required: boolean;
-//   preview: boolean;
-// };
-
 export function DynamicInput({
   label,
   name,

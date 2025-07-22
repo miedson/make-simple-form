@@ -9,7 +9,7 @@ import { useHeaderFormContext } from '../../contexts/header-form.context';
 import { useEffect } from 'react';
 
 export function BuilderHeader() {
-  const { formData, formDataPreview, setFormDataPreview, save, publish, isLoading } =
+  const { formData, setFormDataPreview, save, publish, isLoading } =
     useHeaderFormContext();
 
   const formMethods = useForm<HeaderFormData>({
@@ -94,7 +94,7 @@ export function BuilderHeader() {
               type="submit"
               colorPalette="brand"
               variant="solid"
-              disabled={formDataPreview?.updated}
+              disabled={formData?.updated}
               loading={isLoading}
             >
               <Save /> Salvar

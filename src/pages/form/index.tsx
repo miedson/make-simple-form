@@ -57,6 +57,7 @@ export function FormPage() {
       formService
         .findById(id)
         .then((response) => {
+          console.log(response)
           if (response && response.elements?.length) {
             setFormData(response);
             setSchema(generateSchema(response.elements));
@@ -78,22 +79,22 @@ export function FormPage() {
   const handleSave = (data: Record<string, string | string[]>) => {
     const responses: Responses[] = data
       ? Object.entries(data).map(([id, value]) => {
-          const element = formData?.elements?.find((element) => element.id === id);
-          const response = element?.options?.length
-            ? [value]
-                .flatMap((v) => v)
-                .map((v) => {
-                  const { label, value } = element?.options?.find((e) => e.value == v) ?? {};
-                  return { description: label, value };
-                })
-            : value;
+        const element = formData?.elements?.find((element) => element.id === id);
+        const response = element?.options?.length
+          ? [value]
+            .flatMap((v) => v)
+            .map((v) => {
+              const { label, value } = element?.options?.find((e) => e.value == v) ?? {};
+              return { description: label, value };
+            })
+          : value;
 
-          return {
-            element_id: element?.id ?? '',
-            question: element?.label,
-            response,
-          };
-        })
+        return {
+          element_id: element?.id ?? '',
+          question: element?.label,
+          response,
+        };
+      })
       : [];
 
     setIsLoading(true);

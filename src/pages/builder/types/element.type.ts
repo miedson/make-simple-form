@@ -10,6 +10,10 @@ export type Element = {
   }[];
   required?: boolean;
   isPreview?: boolean;
+  isView?: boolean;
+  parentId?: string; 
+  columns?: string | null;
+  elements?: Element[];
 };
 
-export type AvailableTypes = 'input' | 'select' | 'radio' | 'checkbox' | 'textarea';
+export type AvailableTypes = 'input' | 'select' | 'radio' | 'checkbox' | 'textarea' | 'file' | 'date' | 'container';

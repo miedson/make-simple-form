@@ -1,23 +1,52 @@
 import { z } from 'zod';
 
-export const movedElementValidationSchema = z.object({
-  label: z.string().nonempty({ message: 'Informe um titulo para o campo' }),
-  placeholder: z.string().nullable(),
-  options: z
-    .array(
-      z.object({
-        label: z.string(),
-        value: z.string(),
-      })
-    )
-    .refine(
-      (options) => options.every((option) => option.label.length > 0 && option.value.length > 0),
-      {
-        message: 'Todas as opções devem ter descrição e valor preenchidos.',
-      }
-    )
-    .optional(),
-  required: z.boolean().optional(),
-});
+export const getMovedElementValidationSchema = (type?: string) => {
+  return z
+    .object({
+      label: z.string().optional(),
+      placeholder: z.string().nullable().optional(),
+      options: z
+        .array(
+          z.object({
+            label: z.string(),
+            value: z.string(),
+          })
+        )
+        .optional(),
+      required: z.boolean().optional(),
+      isColumns: z.boolean().optional(),
+      columns: z.string().min(1).max(2).optional(),
+    })
+    .superRefine((data, ctx) => {
+      const isContainer = type === 'container';
 
-export type MovedElementValidationData = z.infer<typeof movedElementValidationSchema>;
+      if (isContainer) {
+        if (data.isColumns && (data.columns === undefined || data.columns === null)) {
+          ctx.addIssue({
+            path: ['columns'],
+            code: z.ZodIssueCode.custom,
+            message: 'O número de colunas é obrigatório quando "Colunas" está ativado.',
+          });
+        }
+        return;
+      }
+
+      if (!data.label || data.label.trim() === '') {
+        ctx.addIssue({
+          path: ['label'],
+          code: z.ZodIssueCode.custom,
+          message: 'Informe um título para o campo.',
+        });
+      }
+
+      if (['select', 'radio', 'checkbox'].includes(type ?? '') && !data.options?.length) {
+        ctx.addIssue({
+          path: ['options'],
+          code: z.ZodIssueCode.custom,
+          message: 'Preencha ao menos uma opção.',
+        });
+      }
+    });
+};
+
+export type MovedElementValidationData = z.infer<ReturnType<typeof getMovedElementValidationSchema>>;

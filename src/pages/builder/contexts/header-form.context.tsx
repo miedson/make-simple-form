@@ -47,6 +47,7 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
   }, [elements]);
 
   const save = (data: FormData) => {
+    console.log({ ...formData, ...data, elements })
     const updated = true;
     const newOrUpdatedFormData =
       formData && formData.id
@@ -61,14 +62,12 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
         setFormDataPreview(newOrUpdatedFormData);
         updateLocalStore('form', newOrUpdatedFormData);
         toaster.create({
-          title: 'Sucesso',
           type: 'success',
           description: 'Salvo com sucesso',
         });
       })
       .catch((error) =>
         toaster.create({
-          title: 'Error',
           type: 'error',
           description: error.response.data.message ?? 'Não foi possivel criar o formulário',
         })

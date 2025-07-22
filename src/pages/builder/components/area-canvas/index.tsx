@@ -5,10 +5,11 @@ import { useColorModeValue } from '../../../../components/ui/color-mode';
 import { useDragDropContext } from '../../contexts/drag-drop.context';
 import { useRenderElement } from '../../hooks/use-render-element';
 import { ConfigElement, type ConfigElementRef } from '../config-element';
+import type { MovedElementValidationData } from '../config-element/form-config-element.schema';
 
 export function AreaCanvas() {
   const [dragOver, setDragOver] = useState(false);
-  const { movedElement, elements, addElement, removeElementById } = useDragDropContext();
+  const { movedElement, elements, addElement, changeElement, removeElementById, isOverContainer } = useDragDropContext();
   const configElementRef = useRef<ConfigElementRef>(null);
   const { renderElement } = useRenderElement();
 
@@ -37,6 +38,18 @@ export function AreaCanvas() {
     }
   };
 
+  const onSave = (data: MovedElementValidationData) => {
+    if (data && movedElement) {
+      changeElement(movedElement.id, data);
+    }
+  };
+
+  const onCancel = () => {
+    if (movedElement) {
+      removeElementById(movedElement.id)
+    }
+  }
+
   return (
     <>
       <Flex
@@ -45,7 +58,13 @@ export function AreaCanvas() {
         padding={'1rem'}
         border="2px dashed"
         borderColor={dragOver ? dragBorderColor : borderColor}
-        bg={dragOver ? dragBgColor : !elements.length ? emptyBgColor : bgColor}
+        bg={
+          dragOver && !isOverContainer
+            ? dragBgColor
+            : !elements.length
+              ? emptyBgColor
+              : bgColor
+        }
         borderRadius="lg"
         onDrop={handleOnDrop}
         transition="all 0.2s"
@@ -81,8 +100,8 @@ export function AreaCanvas() {
                     size="sm"
                     bg={'red.600'}
                     position="absolute"
-                    top="-2"
-                    right="-2"
+                    top="-4"
+                    right="-4"
                     opacity={0}
                     _groupHover={{ opacity: 1 }}
                     onClick={() => removeElementById(element.id)}
@@ -98,7 +117,7 @@ export function AreaCanvas() {
           </Flex>
         )}
       </Flex>
-      <ConfigElement ref={configElementRef} />
+      <ConfigElement ref={configElementRef} onSave={onSave} onCancel={onCancel} />
     </>
   );
 }

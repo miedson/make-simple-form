@@ -1,8 +1,8 @@
 import { Flex } from '@chakra-ui/react';
+import { AlignLeft, Calendar, CheckSquare, ChevronDown, Circle, Layout, Paperclip, Type } from 'lucide-react';
+import { AreaCanvas } from '../area-canvas';
 import { Column } from '../column';
 import { Element } from '../element';
-import { Type, ChevronDown, Circle, AlignLeft, CheckSquare } from 'lucide-react';
-import { AreaCanvas } from '../area-canvas';
 import { ViewingArea } from '../viewing-area';
 
 export function BuilderBody() {
@@ -18,11 +18,17 @@ export function BuilderBody() {
         <Element name="Escolha única" icon={Circle} type="radio" />
         <Element name="Múltiplas escolhas" icon={CheckSquare} type="checkbox" />
         <Element name="Texto longo" icon={AlignLeft} type="textarea" />
+        <Element name="Anexo" icon={Paperclip} type="file" />
+        <Element name="Date" icon={Calendar} type="date" />
+        <Element name="Container" icon={Layout} type="container" />
       </Column>
       <Column
         heading="Canvas do Formulário"
         description="Arraste elementos aqui para construir seu formulário"
-        flex={1}
+        flex={{
+          md: 1,
+          xl: 2
+        }}
       >
         <AreaCanvas />
       </Column>
@@ -30,7 +36,10 @@ export function BuilderBody() {
         heading="Visualização"
         description="Visualização ao vivo do seu formulário"
         bg={'white'}
-        flex={1}
+        flex={{
+          md: 1,
+          xl: 2
+        }}
       >
         <ViewingArea />
       </Column>

@@ -16,6 +16,11 @@ export function ViewingArea() {
   const { elements } = useDragDropContext();
   const { renderElement } = useRenderElement();
   const { formDataPreview } = useHeaderFormContext();
+  const { paginatedData, pagination } = usePagination<Element>({
+    data: elements,
+    itemsPerPage: Number(formDataPreview?.itemsPerPage),
+  });
+  const [elementsView, setElementsView] = useState<Element[]>(paginatedData);
 
   const [schema, setSchema] = useState<z.ZodObject<z.ZodRawShape> | undefined>();
 
@@ -28,10 +33,16 @@ export function ViewingArea() {
     setSchema(generateSchema(elements ?? []));
   }, []);
 
-  const { paginatedData, pagination } = usePagination<Element>({
-    data: elements,
-    itemsPerPage: Number(formDataPreview?.itemsPerPage),
-  });
+  useEffect(() => {
+    if (paginatedData.length) {
+      const elementsWithView = paginatedData.map(element => ({
+        ...element,
+        isView: true,
+      }));
+      setElementsView(elementsWithView);
+    }
+  }, [paginatedData]);
+
 
   return (
     <FormProvider {...formMethods}>
@@ -39,7 +50,7 @@ export function ViewingArea() {
         {formDataPreview?.name && (
           <HeaderForm formData={formDataPreview}>
             <Flex w={'full'} flexDir={'column'} gap={'1rem'}>
-              {paginatedData.map((element) => (
+              {elementsView && elementsView.map((element) => (
                 <Flex
                   key={element.id}
                   w={'full'}
