@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy via SSH
         run: |
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.VPS_HOST }} "
+          ssh -A -o StrictHostKeyChecking=no root@${{ secrets.VPS_HOST }} "
             cd ~/docker/projetos/make-simple-form &&
             git pull &&
             docker compose build &&
