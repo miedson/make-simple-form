@@ -1,12 +1,14 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from './components/ui/provider.tsx';
-import { Routes } from './routes.tsx';
+import { AppRoutes } from './routes.tsx';
+import { Toaster } from './components/ui/toaster.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider>
-      <Routes />
+      <AppRoutes />
+      <Toaster />
     </Provider>
   </StrictMode>
 );

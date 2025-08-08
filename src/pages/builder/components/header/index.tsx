@@ -8,7 +8,10 @@ import { headerFormSchema, type HeaderFormData } from './header-form.schema';
 import { useHeaderFormContext } from '../../contexts/header-form.context';
 import { useEffect } from 'react';
 
-export function HeaderBuilder() {
+export function BuilderHeader() {
+  const { formData, formDataPreview, setFormDataPreview, save, publish, isLoading } =
+    useHeaderFormContext();
+
   const formMethods = useForm<HeaderFormData>({
     resolver: zodResolver(headerFormSchema),
     mode: 'onChange',
@@ -18,23 +21,39 @@ export function HeaderBuilder() {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = formMethods;
-  const { setFormData } = useHeaderFormContext();
 
   const name = watch('name');
   const description = watch('description');
+  const itemsPerPage = watch('itemsPerPage');
 
   useEffect(() => {
-    setFormData({ name, description });
-  }, [name, description]);
+    setFormDataPreview({
+      name,
+      description,
+      updated: false,
+      published: formData?.published,
+      itemsPerPage,
+    });
+  }, [name, description, itemsPerPage]);
+
+  useEffect(() => {
+    reset({
+      name: formData?.name ?? '',
+      description: formData?.description ?? '',
+      itemsPerPage: formData?.itemsPerPage,
+    });
+  }, [formData, reset]);
 
   const handleSave = (data: HeaderFormData) => {
-    console.log(data);
+    save(data);
   };
 
   return (
     <Flex
+      flexDir={{ base: 'column', md: 'row' }}
       w={'full'}
       h={'6.563rem'}
       paddingBlock={'1rem'}
@@ -44,14 +63,20 @@ export function HeaderBuilder() {
       alignItems={'center'}
       justifyContent={'space-between'}
     >
-      <Text fontSize={'3xl'} fontWeight={'bold'} lineHeight={'1.2rem'} color={'brand.600'}>
+      <Text
+        fontSize={'3xl'}
+        fontWeight={'bold'}
+        lineHeight={'1.2rem'}
+        color={'brand.600'}
+        mr={'1rem'}
+      >
         MakeSimpleForm
       </Text>
       <FormProvider {...formMethods}>
         <Flex
           as={'form'}
           maxH={'4.563rem'}
-          gap={'1rem'}
+          gap={{ sm: '0.5rem', md: '1rem' }}
           alignItems={'start'}
           onSubmit={handleSubmit(handleSave)}
         >
@@ -59,16 +84,27 @@ export function HeaderBuilder() {
             <Input placeholder="Novo formulário" {...register('name')} />
             <Field.ErrorText>{errors.name?.message}</Field.ErrorText>
           </Field.Root>
-          <Flex gap={'1rem'} alignItems={'center'}>
+          <Flex gap={{ sm: '0.5rem', md: '1rem' }} alignItems={'center'}>
             <Tooltip content={'Mais configurações'}>
               <Flex color={'blue.600'} cursor={'pointer'}>
                 <MoreSettingsForm />
               </Flex>
             </Tooltip>
-            <Button type="submit" colorPalette="brand" variant="solid">
+            <Button
+              type="submit"
+              colorPalette="brand"
+              variant="solid"
+              disabled={formDataPreview?.updated}
+              loading={isLoading}
+            >
               <Save /> Salvar
             </Button>
-            <Button colorPalette="brand" variant="outline">
+            <Button
+              colorPalette="brand"
+              variant="outline"
+              onClick={publish}
+              disabled={formData?.published}
+            >
               <Upload /> Publicar
             </Button>
           </Flex>

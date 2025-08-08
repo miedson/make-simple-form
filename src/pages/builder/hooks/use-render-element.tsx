@@ -10,8 +10,11 @@ export function useRenderElement() {
   const renderElement = useDeepCompareCallback((element: Element) => {
     const props = {
       label: element.label ?? '',
-      name: element.name ?? '',
+      name: element.id ?? '',
       placeholder: element.placeholder ?? '',
+      preview: element.isPreview ?? false,
+      disabled: element?.isPreview ?? false,
+      required: element.required ?? false,
       options: element.options ?? [],
     };
 

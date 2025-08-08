@@ -1,11 +1,12 @@
-import { BodyBuilder } from './components/body';
-import { HeaderBuilder } from './components/header';
+import { Flex } from '@chakra-ui/react';
+import { BuilderBody } from './components/body';
+import { BuilderHeader } from './components/header';
 
 export function BuilderPage() {
   return (
-    <>
-      <HeaderBuilder />
-      <BodyBuilder />
-    </>
+    <Flex h={'100vh'} flexDir={'column'} overflow={'hidden'}>
+      <BuilderHeader />
+      <BuilderBody />
+    </Flex>
   );
 }

@@ -18,7 +18,13 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
   const formMethods = useForm<MovedElementValidationData>({
     resolver: zodResolver(movedElementValidationSchema),
   });
-  const { register, control, handleSubmit, reset } = formMethods;
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = formMethods;
   const [open, setOpen] = useState(false);
 
   useImperativeHandle(ref, () => ({
@@ -26,17 +32,18 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
     close: () => setOpen(false),
   }));
 
-  const { movedElement, setMovedElement, changeElement, removeElementById } = useDragDropContext();
+  const { movedElement, changeElement, removeElementById } = useDragDropContext();
 
   const handleCancel = () => {
-    movedElement && removeElementById(movedElement?.id);
+    if (movedElement) {
+      removeElementById(movedElement.id);
+    }
     setOpen(false);
   };
 
   const handleSave = (data: MovedElementValidationData) => {
     if (data && movedElement) {
       changeElement(movedElement.id, data);
-      setMovedElement(undefined);
       setOpen(false);
       reset();
     }
@@ -48,62 +55,64 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
         <Drawer.Backdrop />
         <Drawer.Positioner>
           <FormProvider {...formMethods}>
-            <Drawer.Content as={'form'} onSubmit={handleSubmit(handleSave)}>
-              <Drawer.Header>
-                <Drawer.Title>Configure o campo</Drawer.Title>
-              </Drawer.Header>
-              <Drawer.Body>
-                <Stack gap="8" maxW="sm">
-                  <Field.Root orientation="vertical">
-                    <Field.Label>Título do campo</Field.Label>
-                    <Input placeholder="Ex: Nome completo	" {...register('label')} />
-                  </Field.Root>
+            <Drawer.Content>
+              <form onSubmit={handleSubmit(handleSave)} noValidate>
+                <Drawer.Header>
+                  <Drawer.Title>Configure o campo</Drawer.Title>
+                </Drawer.Header>
+                <Drawer.Body>
+                  <Stack gap="8" maxW="sm">
+                    <Field.Root orientation="vertical" required invalid={!!errors.label?.message}>
+                      <Field.Label>
+                        Título do campo
+                        <Field.RequiredIndicator />
+                      </Field.Label>
+                      <Input placeholder="Ex: Nome completo	" {...register('label')} />
+                      <Field.ErrorText>{errors.label?.message}</Field.ErrorText>
+                    </Field.Root>
 
-                  <Field.Root orientation="vertical">
-                    <Field.Label>Identificador interno</Field.Label>
-                    <Input placeholder="Ex: nome_completo" {...register('name')} />
-                  </Field.Root>
+                    <Field.Root orientation="vertical" invalid={!!errors.placeholder?.message}>
+                      <Field.Label>Texto de ajuda</Field.Label>
+                      <Input
+                        placeholder="Ex: Digite seu nome completo aqui"
+                        {...register('placeholder')}
+                      />
+                      <Field.ErrorText>{errors.placeholder?.message}</Field.ErrorText>
+                    </Field.Root>
 
-                  <Field.Root orientation="vertical">
-                    <Field.Label>Texto de ajuda</Field.Label>
-                    <Input
-                      placeholder="Ex: Digite seu nome completo aqui"
-                      {...register('placeholder')}
-                    />
-                  </Field.Root>
+                    {['select', 'radio', 'checkbox'].includes(movedElement?.type ?? '') ? (
+                      <OptionsFieldArray />
+                    ) : null}
 
-                  {['select', 'radio', 'checkbox'].includes(movedElement?.type ?? '') && (
-                    <OptionsFieldArray />
-                  )}
-
-                  <Field.Root orientation="horizontal">
-                    <Field.Label>Este campo é obrigatório?</Field.Label>
-                    <Controller
-                      name="required"
-                      control={control}
-                      render={({ field }) => (
-                        <Switch.Root
-                          name={field.name}
-                          checked={field.value}
-                          onCheckedChange={({ checked }) => field.onChange(checked)}
-                        >
-                          <Switch.HiddenInput />
-                          <Switch.Control />
-                        </Switch.Root>
-                      )}
-                    />
-                  </Field.Root>
-                </Stack>
-              </Drawer.Body>
-              <Drawer.Footer>
-                <Button variant="outline" onClick={handleCancel}>
-                  Cancelar
-                </Button>
-                <Button type="submit">Salvar</Button>
-              </Drawer.Footer>
-              <Drawer.CloseTrigger asChild>
-                <CloseButton size="sm" onClick={handleCancel} />
-              </Drawer.CloseTrigger>
+                    <Field.Root orientation="horizontal">
+                      <Field.Label>Este campo é obrigatório?</Field.Label>
+                      <Controller
+                        name="required"
+                        control={control}
+                        render={({ field }) => (
+                          <Switch.Root
+                            name={field.name}
+                            checked={field.value}
+                            onCheckedChange={({ checked }) => field.onChange(checked)}
+                          >
+                            <Switch.HiddenInput />
+                            <Switch.Control />
+                          </Switch.Root>
+                        )}
+                      />
+                    </Field.Root>
+                  </Stack>
+                </Drawer.Body>
+                <Drawer.Footer>
+                  <Button variant="outline" onClick={handleCancel}>
+                    Cancelar
+                  </Button>
+                  <Button type="submit">Salvar</Button>
+                </Drawer.Footer>
+                <Drawer.CloseTrigger asChild>
+                  <CloseButton size="sm" onClick={handleCancel} />
+                </Drawer.CloseTrigger>
+              </form>
             </Drawer.Content>
           </FormProvider>
         </Drawer.Positioner>
@@ -111,3 +120,5 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
     </Drawer.Root>
   );
 });
+
+ConfigElement.displayName = 'ConfigElement';
