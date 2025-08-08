@@ -78,22 +78,22 @@ export function FormPage() {
   const handleSave = (data: Record<string, string | string[]>) => {
     const responses: Responses[] = data
       ? Object.entries(data).map(([id, value]) => {
-          const element = formData?.elements?.find((element) => element.id === id);
-          const response = element?.options?.length
-            ? [value]
-                .flatMap((v) => v)
-                .map((v) => {
-                  const { label, value } = element?.options?.find((e) => e.value == v) ?? {};
-                  return { description: label, value };
-                })
-            : value;
+        const element = formData?.elements?.find((element) => element.id === id);
+        const response = element?.options?.length
+          ? [value]
+            .flatMap((v) => v)
+            .map((v) => {
+              const { label, value } = element?.options?.find((e) => e.value == v) ?? {};
+              return { description: label, value };
+            })
+          : value;
 
-          return {
-            element_id: element?.id ?? '',
-            question: element?.label,
-            response,
-          };
-        })
+        return {
+          element_id: element?.id ?? '',
+          question: element?.label,
+          response,
+        };
+      })
       : [];
 
     setIsLoading(true);
@@ -168,7 +168,7 @@ export function FormPage() {
           <FileX />
         </EmptyState.Indicator>
         <VStack textAlign="center">
-          <EmptyState.Title>Formulário não existe ou não encontrado</EmptyState.Title>
+          <EmptyState.Title>Formulário não encontrado ou não existe</EmptyState.Title>
           <EmptyState.Description>
             Verifique se o formulário existe e se o mesmo foi publicado.
           </EmptyState.Description>

@@ -1,5 +1,5 @@
 import { CloseButton, Dialog, Group, IconButton, Input, Portal } from '@chakra-ui/react';
-import { Check, Clipboard } from 'lucide-react';
+import { Check, Clipboard, ExternalLink } from 'lucide-react';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 
 type PublishSuccessModalProps = {
@@ -13,8 +13,9 @@ export type PublishSuccessModalRef = {
 
 export const PublishSuccessModal = forwardRef<PublishSuccessModalRef, PublishSuccessModalProps>(
   ({ url }, ref) => {
+    const DEFAULT_ICON_COPY = <Clipboard />;
     const [open, setOpen] = useState(false);
-    const [icon, setIcon] = useState(<Clipboard />);
+    const [copyIcon, setCopyIcon] = useState(DEFAULT_ICON_COPY);
 
     useImperativeHandle(ref, () => ({
       open: () => setOpen(true),
@@ -25,13 +26,17 @@ export const PublishSuccessModal = forwardRef<PublishSuccessModalRef, PublishSuc
       navigator.clipboard
         .writeText(url)
         .then(() => {
-          setIcon(<Check />);
+          setCopyIcon(<Check />);
           setTimeout(() => {
-            setIcon(<Clipboard />);
+            setCopyIcon(DEFAULT_ICON_COPY);
           }, 3000);
         })
         .catch((error) => console.error(error));
     };
+
+    const handleOpenLink = () => {
+      window.open(url, '__blank');
+    }
 
     return (
       <Dialog.Root
@@ -51,7 +56,10 @@ export const PublishSuccessModal = forwardRef<PublishSuccessModalRef, PublishSuc
               <Dialog.Body>
                 <Group attached w="full">
                   <Input flex="1" value={url} disabled />
-                  <IconButton onClick={handleCopy}>{icon}</IconButton>
+                  <IconButton onClick={handleCopy}>{copyIcon}</IconButton>
+                  <IconButton onClick={handleOpenLink} borderLeft={'1px solid'}>
+                    <ExternalLink />
+                  </IconButton>
                 </Group>
               </Dialog.Body>
               <Dialog.CloseTrigger asChild>

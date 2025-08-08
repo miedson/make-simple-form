@@ -1,13 +1,14 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
-import { useLocalStorage } from '../hooks/use-local-storage';
-import type { FormData } from '../types/form-data.type';
-import { useDragDropContext } from './drag-drop.context';
 import { appURL, formService } from '../../../api/api';
 import { toaster } from '../../../components/ui/toaster';
+import { ConfirmMessageModal, type ConfirmMessageModalRef } from '../components/alert-message-modal';
 import {
   PublishSuccessModal,
   type PublishSuccessModalRef,
 } from '../components/publish-sucess-modal';
+import { useLocalStorage } from '../hooks/use-local-storage';
+import type { FormData } from '../types/form-data.type';
+import { useDragDropContext } from './drag-drop.context';
 
 type DataFormPreview = Pick<
   FormData,
@@ -20,6 +21,7 @@ type HeaderFormContextType = {
   formDataPreview: DataFormPreview | undefined;
   setFormDataPreview: (formData: DataFormPreview) => void;
   save: (formData: FormData) => void;
+  newForm: () => void
   publish: () => void;
   isLoading: boolean;
 };
@@ -34,6 +36,7 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
   const [url, setUrl] = useState('');
   const { elements } = useDragDropContext();
   const modalRef = useRef<PublishSuccessModalRef>(null);
+  const confirmMessagemodalRef = useRef<ConfirmMessageModalRef>(null);
 
   useEffect(() => {
     const localStorageData = getLocalStorageData('form');
@@ -76,6 +79,16 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
       .finally(() => setIsLoading(false));
   };
 
+  const newForm = () => {
+    const localStorageData = getLocalStorageData('form');
+    if (localStorageData?.updated) {
+      confirmMessagemodalRef.current?.open();
+    }
+
+    // setFormData(undefined);
+    // setFormDataPreview(undefined);
+  }
+
   const publish = () => {
     if (formData && formData.updated && formData.id) {
       setIsLoading(true);
@@ -87,6 +100,9 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
           // setFormData(undefined);
           // setFormDataPreview(undefined);
           // localStorage.removeItem('form');
+          const updatedFormData = { ...formData, publish: true };
+          setFormData(updatedFormData);
+          updateLocalStore('form', updatedFormData);
         })
         .catch((error) =>
           toaster.create({
@@ -107,12 +123,21 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
         formDataPreview,
         setFormDataPreview,
         save,
+        newForm,
         publish,
         isLoading,
       }}
     >
       {children}
       <PublishSuccessModal ref={modalRef} url={url} />
+      <ConfirmMessageModal
+        ref={confirmMessagemodalRef}
+        description={'Todos os dados do formulário atual serão perdidos!'}
+        labelButtonConfirm={'Sim'}
+        labelButtonCancel={'Não'}
+        onConfirm={() => console.log('sim')}
+        onCancel={() => console.log('não')}
+      />
     </HeaderFormContext.Provider>
   );
 }

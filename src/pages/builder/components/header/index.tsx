@@ -1,5 +1,5 @@
 import { Button, Field, Flex, Input, Text } from '@chakra-ui/react';
-import { Save, Upload } from 'lucide-react';
+import { FilePlus, Save, Upload } from 'lucide-react';
 import { Tooltip } from '../../../../components/ui/tooltip';
 import { MoreSettingsForm } from './components/more-settings-form';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -9,7 +9,7 @@ import { useHeaderFormContext } from '../../contexts/header-form.context';
 import { useEffect } from 'react';
 
 export function BuilderHeader() {
-  const { formData, formDataPreview, setFormDataPreview, save, publish, isLoading } =
+  const { formData, setFormDataPreview, save, newForm, publish, isLoading } =
     useHeaderFormContext();
 
   const formMethods = useForm<HeaderFormData>({
@@ -92,18 +92,24 @@ export function BuilderHeader() {
             </Tooltip>
             <Button
               type="submit"
-              colorPalette="brand"
               variant="solid"
-              disabled={formDataPreview?.updated}
+              bg={'green.600'}
+              disabled={formData?.updated}
               loading={isLoading}
             >
               <Save /> Salvar
             </Button>
             <Button
+              variant="solid"
+              onClick={newForm}
+            >
+              <FilePlus /> Novo
+            </Button>
+            <Button
               colorPalette="brand"
               variant="outline"
               onClick={publish}
-              disabled={formData?.published}
+              disabled={!formData?.updated || formData.published}
             >
               <Upload /> Publicar
             </Button>
