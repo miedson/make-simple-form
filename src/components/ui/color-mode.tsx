@@ -2,11 +2,11 @@
 
 import type { SpanProps } from '@chakra-ui/react';
 import { ClientOnly, IconButton, Skeleton, Span } from '@chakra-ui/react';
-import { ThemeProvider, useTheme } from 'next-themes';
+import { ThemeProvider, useTheme, type ThemeProviderProps } from 'next-themes';
 import * as React from 'react';
 import { LuMoon, LuSun } from 'react-icons/lu';
 
-export type ColorModeProviderProps = React.ComponentPropsWithoutRef<'div'>;
+export type ColorModeProviderProps = React.ComponentPropsWithoutRef<'div'> & ThemeProviderProps;
 
 export function ColorModeProvider(props: ColorModeProviderProps) {
   return <ThemeProvider attribute="class" disableTransitionOnChange {...props} />;
