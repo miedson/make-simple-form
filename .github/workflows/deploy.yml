@@ -26,6 +26,7 @@ jobs:
           ssh root@${{ secrets.VPS_HOST }} "
             set -e
             cd ~/docker/projetos/make-simple-form
+            docker compose down
             git pull
             docker compose build --no-cache
             docker compose up -d --remove-orphans
