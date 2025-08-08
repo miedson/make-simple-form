@@ -1,0 +1,19 @@
+services:
+  makesimpleformfrontend:
+    image: node:20-alpine
+    container_name: make-simple-form-frontend
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "npm install && npm run build && npx serve -s dist -l 3001"
+    labels:
+      - 'traefik.http.routers.frontend.rule=Host(`www.makesimpleform.com.br`)'
+      - 'traefik.http.routers.frontend.entrypoints=websecure'
+      - 'traefik.http.routers.frontend.tls.certresolver=letsencrypt'
+      - 'traefik.http.services.frontend.loadbalancer.server.port=3001'
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
