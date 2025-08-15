@@ -50,12 +50,12 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
   };
 
   return (
-    <Drawer.Root open={open}>
+    <Drawer.Root open={open} onOpenChange={(details) => setOpen(details.open)} closeOnEscape={true} closeOnInteractOutside={true}>
       <Portal>
         <Drawer.Backdrop />
         <Drawer.Positioner>
           <FormProvider {...formMethods}>
-            <Drawer.Content>
+            <Drawer.Content overflowY={'auto'}>
               <form onSubmit={handleSubmit(handleSave)} noValidate>
                 <Drawer.Header>
                   <Drawer.Title>Configure o campo</Drawer.Title>
