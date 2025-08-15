@@ -22,7 +22,7 @@ export function BuilderBody() {
       <Column
         heading="Canvas do Formulário"
         description="Arraste elementos aqui para construir seu formulário"
-        flex={1}
+        flex={2}
       >
         <AreaCanvas />
       </Column>
@@ -30,7 +30,7 @@ export function BuilderBody() {
         heading="Visualização"
         description="Visualização ao vivo do seu formulário"
         bg={'white'}
-        flex={1}
+        flex={2}
       >
         <ViewingArea />
       </Column>
