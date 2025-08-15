@@ -7,5 +7,7 @@ export function useLocalStorage<T>() {
   const updateLocalStore = (name: string, newData: T) =>
     localStorage.setItem(name, JSON.stringify({ ...newData }));
 
-  return { getLocalStorageData, updateLocalStore };
+  const clean = (name: string) => localStorage.removeItem(name);
+
+  return { getLocalStorageData, updateLocalStore, clean };
 }

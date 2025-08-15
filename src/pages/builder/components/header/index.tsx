@@ -9,7 +9,7 @@ import { useHeaderFormContext } from '../../contexts/header-form.context';
 import { useEffect } from 'react';
 
 export function BuilderHeader() {
-  const { formData, setFormDataPreview, save, newForm, publish, isLoading } =
+  const { formData, setFormDataPreview, formDataPreview, save, newForm, publish, isLoading } =
     useHeaderFormContext();
 
   const formMethods = useForm<HeaderFormData>({
@@ -30,13 +30,15 @@ export function BuilderHeader() {
   const itemsPerPage = watch('itemsPerPage');
 
   useEffect(() => {
-    setFormDataPreview({
+    const formUpdated = {
       name,
       description,
-      updated: false,
       published: formData?.published,
       itemsPerPage,
-    });
+    }
+
+    const isUpdated = JSON.stringify(formData) !== JSON.stringify({ ...formData, ...formUpdated });
+    setFormDataPreview({ ...formUpdated, updated: !isUpdated });
   }, [name, description, itemsPerPage]);
 
   useEffect(() => {
@@ -94,7 +96,7 @@ export function BuilderHeader() {
               type="submit"
               variant="solid"
               bg={'green.600'}
-              disabled={formData?.updated}
+              disabled={formDataPreview?.updated}
               loading={isLoading}
             >
               <Save /> Salvar

@@ -31,7 +31,7 @@ const HeaderFormContext = createContext<HeaderFormContextType>({} as HeaderFormC
 export function FormContexProvider({ children }: { children: ReactNode }) {
   const [formData, setFormData] = useState<FormData>();
   const [formDataPreview, setFormDataPreview] = useState<DataFormPreview>();
-  const { getLocalStorageData, updateLocalStore } = useLocalStorage<FormData>();
+  const { getLocalStorageData, updateLocalStore, clean } = useLocalStorage<FormData>();
   const [isLoading, setIsLoading] = useState(false);
   const [url, setUrl] = useState('');
   const { elements } = useDragDropContext();
@@ -46,15 +46,19 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (formData) setFormData({ ...formData, updated: false });
+    if (formData) {
+      setFormData({ ...formData, updated: false });
+      const localStorageData = getLocalStorageData('form');
+      const isUpdated = JSON.stringify(localStorageData) !== JSON.stringify(formData);
+      setFormDataPreview({ ...formData, updated: !isUpdated })
+    }
   }, [elements]);
 
   const save = (data: FormData) => {
-    const updated = true;
     const newOrUpdatedFormData =
       formData && formData.id
-        ? { ...formData, ...data, elements, updated }
-        : { ...data, id: crypto.randomUUID(), elements, updated, published: false };
+        ? { ...formData, ...data, elements, updated: true }
+        : { ...data, id: crypto.randomUUID(), elements, updated: true, published: false };
 
     setIsLoading(true);
     formService
@@ -81,12 +85,7 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
 
   const newForm = () => {
     const localStorageData = getLocalStorageData('form');
-    if (localStorageData?.updated) {
-      confirmMessagemodalRef.current?.open();
-    }
-
-    // setFormData(undefined);
-    // setFormDataPreview(undefined);
+    if (localStorageData) confirmMessagemodalRef.current?.open();
   }
 
   const publish = () => {
@@ -97,10 +96,7 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
         .then((id) => {
           setUrl(`${appURL}/form/${id}`);
           modalRef.current?.open();
-          // setFormData(undefined);
-          // setFormDataPreview(undefined);
-          // localStorage.removeItem('form');
-          const updatedFormData = { ...formData, publish: true };
+          const updatedFormData = { ...formData, published: true };
           setFormData(updatedFormData);
           updateLocalStore('form', updatedFormData);
         })
@@ -135,8 +131,13 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
         description={'Todos os dados do formulário atual serão perdidos!'}
         labelButtonConfirm={'Sim'}
         labelButtonCancel={'Não'}
-        onConfirm={() => console.log('sim')}
-        onCancel={() => console.log('não')}
+        onConfirm={() => {
+          setFormData(undefined);
+          setFormDataPreview(undefined);
+          clean('form');
+          confirmMessagemodalRef.current?.close();
+        }}
+        onCancel={() => confirmMessagemodalRef.current?.close()}
       />
     </HeaderFormContext.Provider>
   );
