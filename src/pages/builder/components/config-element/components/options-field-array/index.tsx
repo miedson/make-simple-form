@@ -24,16 +24,11 @@ export function OptionsFieldArray() {
               <Input {...register(`options.${index}.label`)} placeholder="Ex: Nome da opção" />
             </Field.Root>
 
-            <Field.Root orientation="vertical">
-              <Field.Label>Valor</Field.Label>
-              <Input {...register(`options.${index}.value`)} placeholder="1" />
-            </Field.Root>
-
             <CloseButton onClick={() => remove(index)} />
           </Flex>
         ))}
 
-        <Button w={'full'} onClick={() => append({ label: '', value: '' })}>
+        <Button w={'full'} onClick={() => append({ label: '', value: crypto.randomUUID() })}>
           Adicionar opção
         </Button>
         <Field.ErrorText>{errors.options?.root?.message}</Field.ErrorText>
