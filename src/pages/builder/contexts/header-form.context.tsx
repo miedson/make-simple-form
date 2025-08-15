@@ -88,26 +88,25 @@ export function FormContexProvider({ children }: { children: ReactNode }) {
     if (localStorageData) confirmMessagemodalRef.current?.open();
   }
 
-  const publish = () => {
-    if (formData && formData.updated && formData.id) {
-      setIsLoading(true);
-      formService
-        .publish(formData.id)
-        .then((id) => {
-          setUrl(`${appURL}/form/${id}`);
-          modalRef.current?.open();
-          const updatedFormData = { ...formData, published: true };
-          setFormData(updatedFormData);
-          updateLocalStore('form', updatedFormData);
-        })
-        .catch((error) =>
-          toaster.create({
-            title: 'Error',
-            type: 'error',
-            description: error.response.data.message ?? 'Não foi possivel publicar o formulário',
-          })
-        )
-        .finally(() => setIsLoading(false));
+  const publish = async () => {
+    try {
+      setUrl(`${appURL}/form/${formData?.id}`);
+      if (formData && formData.updated && formData.id && !formData.published) {
+        setIsLoading(true);
+        const updatedFormData = { ...formData, published: true };
+        await formService.publish(formData.id);
+        setFormData(updatedFormData);
+        updateLocalStore('form', updatedFormData);
+      }
+      modalRef.current?.open();
+    } catch {
+      toaster.create({
+        title: 'Error',
+        type: 'error',
+        description: 'Não foi possivel publicar o formulário',
+      })
+    } finally {
+      setIsLoading(false);
     }
   };
 

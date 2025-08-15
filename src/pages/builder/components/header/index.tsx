@@ -104,6 +104,7 @@ export function BuilderHeader() {
             <Button
               variant="solid"
               onClick={newForm}
+              disabled={!formData}
             >
               <FilePlus /> Novo
             </Button>
@@ -111,7 +112,6 @@ export function BuilderHeader() {
               colorPalette="brand"
               variant="outline"
               onClick={publish}
-              disabled={!formData?.updated || formData.published}
             >
               <Upload /> Publicar
             </Button>
