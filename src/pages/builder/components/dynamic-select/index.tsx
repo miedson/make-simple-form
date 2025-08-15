@@ -10,6 +10,7 @@ type DynamicSelectProps = {
   required: boolean;
   preview: boolean;
   options: OptionType[];
+  multiple?: boolean;
 };
 
 export function DynamicSelect({
@@ -20,6 +21,7 @@ export function DynamicSelect({
   required,
   preview,
   options,
+  multiple
 }: DynamicSelectProps) {
   const formContext = preview ? undefined : useFormContext();
   const optionsCollection = createListCollection<OptionType>({
@@ -52,6 +54,7 @@ export function DynamicSelect({
                 onInteractOutside={() => field.onBlur()}
                 size="sm"
                 width="full"
+                multiple={multiple}
               >
                 <Select.HiddenSelect />
                 <Select.Control>

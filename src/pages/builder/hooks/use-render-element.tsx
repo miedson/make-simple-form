@@ -9,6 +9,7 @@ import type { Element } from '../types/element.type';
 export function useRenderElement() {
   const renderElement = useDeepCompareCallback((element: Element) => {
     const props = {
+      ...element,
       label: element.label ?? '',
       name: element.id ?? '',
       placeholder: element.placeholder ?? '',

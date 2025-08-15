@@ -10,6 +10,7 @@ export type Element = {
   }[];
   required?: boolean;
   isPreview?: boolean;
+  multiple?: boolean;
 };
 
 export type AvailableTypes = 'input' | 'select' | 'radio' | 'checkbox' | 'textarea';

@@ -17,6 +17,7 @@ export const movedElementValidationSchema = z.object({
       }
     )
     .optional(),
+  multiple: z.boolean().optional(),
   required: z.boolean().optional(),
 });
 

@@ -3,11 +3,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useDragDropContext } from '../../contexts/drag-drop.context';
+import { OptionsFieldArray } from './components/options-field-array';
 import {
   type MovedElementValidationData,
   movedElementValidationSchema,
 } from './form-config-element.schema';
-import { OptionsFieldArray } from './components/options-field-array';
 
 export type ConfigElementRef = {
   open: () => void;
@@ -84,8 +84,28 @@ export const ConfigElement = forwardRef<ConfigElementRef>((_, ref) => {
                       <OptionsFieldArray />
                     ) : null}
 
+                    {['select'].includes(movedElement?.type ?? '') ? (
+                      <Field.Root orientation="horizontal">
+                        <Field.Label>Multipla escolha</Field.Label>
+                        <Controller
+                          name="multiple"
+                          control={control}
+                          render={({ field }) => (
+                            <Switch.Root
+                              name={field.name}
+                              checked={field.value}
+                              onCheckedChange={({ checked }) => field.onChange(checked)}
+                            >
+                              <Switch.HiddenInput />
+                              <Switch.Control />
+                            </Switch.Root>
+                          )}
+                        />
+                      </Field.Root>
+                    ) : null}
+
                     <Field.Root orientation="horizontal">
-                      <Field.Label>Este campo é obrigatório?</Field.Label>
+                      <Field.Label>Obrigatório</Field.Label>
                       <Controller
                         name="required"
                         control={control}

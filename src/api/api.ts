@@ -21,7 +21,9 @@ export type Responses = {
 
 export const formService = {
   create: async (data: FormData) =>
-    await api.post('/form', data).catch((error) => console.log(error)),
+    await api.post('/form', data).catch((error) => {
+      throw error;
+    }),
 
   findById: async (id: string): Promise<FormData> =>
     await api
