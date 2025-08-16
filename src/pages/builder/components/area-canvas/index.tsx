@@ -5,6 +5,7 @@ import { useColorModeValue } from '../../../../components/ui/color-mode';
 import { useDragDropContext } from '../../contexts/drag-drop.context';
 import { useRenderElement } from '../../hooks/use-render-element';
 import { ConfigElement, type ConfigElementRef } from '../config-element';
+import { Tooltip } from '../../../../components/ui/tooltip';
 
 export function AreaCanvas() {
   const [dragOver, setDragOver] = useState(false);
@@ -84,34 +85,41 @@ export function AreaCanvas() {
                   transition="opacity 0.2s"
                   gap={'0.5rem'}
                 >
-                  <IconButton
-                    aria-label="Subir elemento"
-                    size="sm"
-                    bg={'green.600'}
-                    cursor={'pointer'}
-                    onClick={() => upElement(element.id)}
-                  >
-                    <ArrowUp size={16} />
-                  </IconButton>
+                  <Tooltip content={"Mover para cima"}>
+                    <IconButton
+                      aria-label="Mover para cima"
+                      size="sm"
+                      bg={'green.600'}
+                      cursor={'pointer'}
+                      onClick={() => upElement(element.id)}
+                    >
+                      <ArrowUp size={16} />
+                    </IconButton>
+                  </Tooltip>
 
-                  <IconButton
-                    aria-label="Descer elemento"
-                    size="sm"
-                    bg={'yellow.600'}
-                    cursor={'pointer'}
-                    onClick={() => downElement(element.id)}
-                  >
-                    <ArrowDown size={16} />
-                  </IconButton>
-                  <IconButton
-                    aria-label="Remover elemento"
-                    size="sm"
-                    bg={'red.600'}
-                    cursor={'pointer'}
-                    onClick={() => removeElementById(element.id)}
-                  >
-                    <X size={16} />
-                  </IconButton>
+                  <Tooltip content={"Mover para baixo"}>
+                    <IconButton
+                      aria-label="Mover para baixo"
+                      size="sm"
+                      bg={'yellow.600'}
+                      cursor={'pointer'}
+                      onClick={() => downElement(element.id)}
+                    >
+                      <ArrowDown size={16} />
+                    </IconButton>
+                  </Tooltip>
+
+                  <Tooltip content={"Excluir"}>
+                    <IconButton
+                      aria-label="Remover elemento"
+                      size="sm"
+                      bg={'red.600'}
+                      cursor={'pointer'}
+                      onClick={() => removeElementById(element.id)}
+                    >
+                      <X size={16} />
+                    </IconButton>
+                  </Tooltip>
                 </Flex>
                 {renderElement(element)}
               </Flex>
