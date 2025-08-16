@@ -18,8 +18,8 @@ export function usePagination<T>({ data, itemsPerPage = 0 }: { data: T[]; itemsP
     const totalPages = Math.ceil(total / itemsPerPage);
 
     const paginatedData = useMemo(() => {
-        const start = page * itemsPerPage; // 0*2 = 0 // 1*2 = 2 // 2*2 = 4
-        const end = start + itemsPerPage; // 0+2 = 2 // 2+2 = 4 // 4 + 2 = 6
+        const start = page * itemsPerPage;
+        const end = start + itemsPerPage;
         return data.slice(start, end);
     }, [page, data, itemsPerPage]);
 

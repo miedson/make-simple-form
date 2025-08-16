@@ -18,6 +18,7 @@ export function Element({ name, icon, type }: ElementProps) {
       id: crypto.randomUUID(),
       type,
       isPreview: true,
+      position: 0
     });
   };
 

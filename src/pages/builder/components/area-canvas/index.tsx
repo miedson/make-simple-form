@@ -1,5 +1,5 @@
 import { Center, Flex, Icon, IconButton, Text } from '@chakra-ui/react';
-import { Plus, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, Plus, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useColorModeValue } from '../../../../components/ui/color-mode';
 import { useDragDropContext } from '../../contexts/drag-drop.context';
@@ -8,7 +8,7 @@ import { ConfigElement, type ConfigElementRef } from '../config-element';
 
 export function AreaCanvas() {
   const [dragOver, setDragOver] = useState(false);
-  const { movedElement, elements, addElement, removeElementById } = useDragDropContext();
+  const { movedElement, elements, addElement, removeElementById, upElement, downElement } = useDragDropContext();
   const configElementRef = useRef<ConfigElementRef>(null);
   const { renderElement } = useRenderElement();
 
@@ -75,23 +75,44 @@ export function AreaCanvas() {
                 position={'relative'}
                 className="group"
               >
-                {element.isPreview && (
+                <Flex
+                  position="absolute"
+                  top="-4"
+                  right="-2"
+                  opacity={0}
+                  _groupHover={{ opacity: 1 }}
+                  transition="opacity 0.2s"
+                  gap={'0.5rem'}
+                >
+                  <IconButton
+                    aria-label="Subir elemento"
+                    size="sm"
+                    bg={'green.600'}
+                    cursor={'pointer'}
+                    onClick={() => upElement(element.id)}
+                  >
+                    <ArrowUp size={16} />
+                  </IconButton>
+
+                  <IconButton
+                    aria-label="Descer elemento"
+                    size="sm"
+                    bg={'yellow.600'}
+                    cursor={'pointer'}
+                    onClick={() => downElement(element.id)}
+                  >
+                    <ArrowDown size={16} />
+                  </IconButton>
                   <IconButton
                     aria-label="Remover elemento"
                     size="sm"
                     bg={'red.600'}
-                    position="absolute"
-                    top="-2"
-                    right="-2"
-                    opacity={0}
-                    _groupHover={{ opacity: 1 }}
+                    cursor={'pointer'}
                     onClick={() => removeElementById(element.id)}
-                    transition="opacity 0.2s"
-                    zIndex={1}
                   >
                     <X size={16} />
                   </IconButton>
-                )}
+                </Flex>
                 {renderElement(element)}
               </Flex>
             ))}

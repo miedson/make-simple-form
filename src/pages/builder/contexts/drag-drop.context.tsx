@@ -11,6 +11,8 @@ type DragDropContextType = {
   addElement: (element: Element) => void;
   changeElement: (id: string, data: MovedElementValidationData) => void;
   removeElementById: (id: string) => void;
+  upElement: (id: string) => void;
+  downElement: (id: string) => void
 };
 
 export const DragDropContext = createContext<DragDropContextType>({} as DragDropContextType);
@@ -31,7 +33,11 @@ export function DragDropProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const addElement = (element: Element) => {
-    setElements([...elements, element]);
+    const nextPosition = elements.reduce(
+      (max, el) => Math.max(max, el.position),
+      0
+    ) + 1;
+    setElements([...elements, { ...element, position: nextPosition }]);
     if (localStorageData) {
       updateLocalStore('form', { ...localStorageData, elements, updated });
     }
@@ -55,6 +61,40 @@ export function DragDropProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const changePosition = (id: string, direction: "up" | "down") => {
+    const element = elements.find(el => el.id === id);
+    if (!element) return;
+
+    const actualPosition = element.position;
+    const newPosition = direction === "up" ? actualPosition - 1 : actualPosition + 1;
+
+    if (newPosition < 1 || newPosition > elements.length) {
+      return;
+    }
+
+    const elementsUpdated = elements.map(el => {
+      if (el.id === id) {
+        return { ...el, position: newPosition };
+      }
+
+      if (el.position === newPosition) {
+        return { ...el, position: actualPosition };
+      }
+
+      return el;
+    });
+
+    const elementsSorted = elementsUpdated.sort((a, b) => a.position - b.position);
+    setElements(elementsSorted);
+
+    if (localStorageData) {
+      updateLocalStore('form', { ...localStorageData, elements, updated });
+    }
+  };
+
+  const upElement = (id: string) => changePosition(id, "up");
+  const downElement = (id: string) => changePosition(id, "down");
+
   return (
     <DragDropContext.Provider
       value={{
@@ -64,6 +104,8 @@ export function DragDropProvider({ children }: { children: ReactNode }) {
         addElement,
         changeElement,
         removeElementById,
+        upElement,
+        downElement
       }}
     >
       {children}

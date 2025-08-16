@@ -11,6 +11,7 @@ export type Element = {
   required?: boolean;
   isPreview?: boolean;
   multiple?: boolean;
+  position: number;
 };
 
 export type AvailableTypes = 'input' | 'select' | 'radio' | 'checkbox' | 'textarea';

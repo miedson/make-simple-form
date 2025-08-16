@@ -33,13 +33,15 @@ export function ViewingArea() {
     itemsPerPage: Number(formDataPreview?.itemsPerPage),
   });
 
+  const elementsSorted = paginatedData.sort((a, b) => a.position - b.position);
+
   return (
     <FormProvider {...formMethods}>
       <Flex as={'form'} w={'full'} flexDir={'column'} gap={'1rem'} mb={'1rem'}>
         {formDataPreview?.name && (
           <HeaderForm formData={formDataPreview}>
             <Flex w={'full'} flexDir={'column'} gap={'1rem'}>
-              {paginatedData.map((element) => (
+              {elementsSorted.map((element) => (
                 <Flex
                   key={element.id}
                   w={'full'}
